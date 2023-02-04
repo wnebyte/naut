@@ -1,6 +1,6 @@
-#include "core/perspectivecamera.h"
 #include <glm/ext/matrix_clip_space.hpp>
 #include <glm/ext/matrix_transform.hpp>
+#include "core/perspectivecamera.h"
 
 namespace core {
 
@@ -32,7 +32,15 @@ namespace core {
 
     void PerspectiveCamera::updateCameraVectors()
     {
-
+        // calculate and normalize the new forward vector
+        forward.x = glm::cos(glm::radians(yaw)) * glm::cos(glm::radians(pitch));
+        forward.y = glm::sin(pitch);
+        forward.z = glm::sin(glm::radians(yaw)) * glm::cos(glm::radians(pitch));
+        forward = glm::normalize(forward);
+        // calculate and normalize the new right vector
+        right = glm::normalize(forward * wUp);
+        // calculate and normalize the new up vector
+        up = glm::normalize(right * forward);
     }
 
     float PerspectiveCamera::getZNear() const noexcept
@@ -63,5 +71,55 @@ namespace core {
     void PerspectiveCamera::setAspect(float newAspect) noexcept
     {
         aspect = newAspect;
+    }
+
+    float PerspectiveCamera::getYaw() const noexcept
+    {
+        return yaw;
+    }
+
+    void PerspectiveCamera::setYaw(float newYaw) noexcept
+    {
+        yaw = newYaw;
+    }
+
+    float PerspectiveCamera::getPitch() const noexcept
+    {
+        return pitch;
+    }
+
+    void PerspectiveCamera::setPitch(float newPitch) noexcept
+    {
+        pitch = newPitch;
+    }
+
+    float PerspectiveCamera::getZoom() const noexcept
+    {
+        return zoom;
+    }
+
+    void PerspectiveCamera::setZoom(float newZoom) noexcept
+    {
+        zoom = newZoom;
+    }
+
+    float PerspectiveCamera::getMovementSpeed() const noexcept
+    {
+        return movementSpeed;
+    }
+
+    void PerspectiveCamera::setMovementSpeed(float newMovementSpeed) noexcept
+    {
+        movementSpeed = newMovementSpeed;
+    }
+
+    float PerspectiveCamera::getMouseSensitivity() const noexcept
+    {
+        return mouseSensitivity;
+    }
+
+    void PerspectiveCamera::setMouseSensitivity(float newMouseSensitivity) noexcept
+    {
+        mouseSensitivity = newMouseSensitivity;
     }
 }

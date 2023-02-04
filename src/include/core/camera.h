@@ -19,7 +19,7 @@ namespace core {
 
         Camera(const glm::vec3& position);
 
-        virtual ~Camera() noexcept = 0;
+        virtual ~Camera() noexcept = default;
 
         virtual void update(float dt);
 
@@ -27,7 +27,7 @@ namespace core {
 
         void setPosition(float x, float y, float z) noexcept;
 
-        void setPosition(glm::vec3&) noexcept;
+        void setPosition(const glm::vec3&) noexcept;
 
         glm::mat4 getProjectionMatrix() const noexcept;
 

@@ -41,6 +41,26 @@ namespace core {
 
         void setAspect(float newAspect) noexcept;
 
+        float getYaw() const noexcept;
+
+        void setYaw(float newYaw) noexcept;
+
+        float getPitch() const noexcept;
+
+        void setPitch(float newPitch) noexcept;
+
+        float getZoom() const noexcept;
+
+        void setZoom(float newZoom) noexcept;
+
+        float getMovementSpeed() const noexcept;
+
+        void setMovementSpeed(float newMovementSpeed) noexcept;
+
+        float getMouseSensitivity() const noexcept;
+
+        void setMouseSensitivity(float newMouseSensitivity) noexcept;
+
     protected:
         glm::vec3 forward;
         glm::vec3 up;

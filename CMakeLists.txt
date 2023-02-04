@@ -22,10 +22,18 @@ set(SOURCES
         ${INCLUDE_DIRECTORY}/core/orthocamera.h
         ${INCLUDE_DIRECTORY}/core/perspectivecamerafwd.h
         ${INCLUDE_DIRECTORY}/core/perspectivecamera.h
+        ${INCLUDE_DIRECTORY}/renderer/shaderfwd.h
+        ${INCLUDE_DIRECTORY}/renderer/shader.h
+        ${INCLUDE_DIRECTORY}/renderer/texturefwd.h
+        ${INCLUDE_DIRECTORY}/renderer/texture.h
+        ${INCLUDE_DIRECTORY}/renderer/texture2fwd.h
+        ${INCLUDE_DIRECTORY}/renderer/texture2.h
         src/cpp/core/window.cpp
         src/cpp/core/camera.cpp
         src/cpp/core/orthocamera.cpp
         src/cpp/core/perspectivecamera.cpp
+        src/cpp/renderer/Shader.cpp
+        src/cpp/renderer/Texture.cpp
         src/cpp/main.cpp
         src/c/glad.c)
 

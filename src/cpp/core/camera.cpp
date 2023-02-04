@@ -9,9 +9,6 @@ namespace core {
       inverseProjectionMatrix(glm::inverse(projectionMatrix)), inverseViewMatrix(glm::inverse(viewMatrix))
     {}
 
-    Camera::~Camera() noexcept
-    {}
-
     void Camera::update(float dt)
     {
         adjustProjection();
@@ -36,7 +33,7 @@ namespace core {
         position.z = z;
     }
 
-    void Camera::setPosition(glm::vec3& newPosition) noexcept
+    void Camera::setPosition(const glm::vec3& newPosition) noexcept
     {
         position = newPosition;
     }
