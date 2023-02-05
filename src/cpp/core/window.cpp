@@ -18,7 +18,7 @@ namespace core {
         }
     }
 
-    static glm::ivec2 getResolution(GLFWmonitor* monitor)
+    static glm::ivec2 getMaxResolution(GLFWmonitor* monitor)
     {
         int width = 0;
         int height = 0;
@@ -57,12 +57,12 @@ namespace core {
 
         // Initialize GLFW
         if (glfwInit() == GLFW_FALSE) {
-            perror("Unable to initialize GLFW.");
+            perror("Unable to init GLFW.");
             std::exit(EXIT_FAILURE);
         }
 
         if (width <= 0 || height <= 0) {
-            glm::ivec2 res = getResolution(glfwGetPrimaryMonitor());
+            glm::ivec2 res = getMaxResolution(glfwGetPrimaryMonitor());
             width = res.x;
             height = res.y;
         }
@@ -87,7 +87,7 @@ namespace core {
 
         // Initialize GLAD
         if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
-            perror("Failed to initialize GLAD.");
+            perror("Failed to init GLAD.");
             std::exit(EXIT_FAILURE);
         }
 
@@ -109,8 +109,6 @@ namespace core {
             glfwSwapBuffers(glfwWindow);
             glfwPollEvents();
         }
-
-        glfwTerminate();
     }
 
     void Window::destroy()

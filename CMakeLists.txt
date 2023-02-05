@@ -26,8 +26,6 @@ set(SOURCES
         ${INCLUDE_DIRECTORY}/renderer/shader.h
         ${INCLUDE_DIRECTORY}/renderer/texturefwd.h
         ${INCLUDE_DIRECTORY}/renderer/texture.h
-        ${INCLUDE_DIRECTORY}/renderer/texture2fwd.h
-        ${INCLUDE_DIRECTORY}/renderer/texture2.h
         src/cpp/core/window.cpp
         src/cpp/core/camera.cpp
         src/cpp/core/orthocamera.cpp

@@ -6,10 +6,11 @@
 
 namespace renderer {
 
-    static void checkCompileErrors(const GLuint shader, const std::string& type)
+    static const GLsizei sz = 1024;
+
+    static void checkCompileErrors(GLuint shader, const std::string& type)
     {
         GLint success;
-        static GLsizei sz = 1024;
         GLchar infoLog[sz];
         glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
         if (!success) {
@@ -20,10 +21,9 @@ namespace renderer {
         }
     }
 
-    static void checkLinkErrors(const GLuint shader)
+    static void checkLinkErrors(GLuint shader)
     {
         GLint success;
-        static GLsizei sz = 1024;
         GLchar infoLog[sz];
         glGetProgramiv(shader, GL_LINK_STATUS, &success);
         if (!success) {
@@ -105,7 +105,7 @@ namespace renderer {
         detached = true;
     }
 
-    int Shader::getId() const noexcept
+    uint Shader::getId() const noexcept
     {
         return id;
     }

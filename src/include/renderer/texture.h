@@ -17,64 +17,55 @@ namespace renderer {
 
             ~Parameter() noexcept = default;
 
-            Parameter(const Parameter& rhs) noexcept;
+            Parameter(const Parameter& rhs) noexcept = default;
 
-            Parameter& operator=(const Parameter& rhs) noexcept;
+            Parameter& operator=(const Parameter& rhs) noexcept = default;
 
-            Parameter(Parameter&& rhs) noexcept;
+            Parameter(Parameter&& rhs) noexcept = default;
 
-            Parameter& operator=(Parameter&& rhs) noexcept;
+            Parameter& operator=(Parameter&& rhs) noexcept = default;
         };
 
         Texture(const std::string& path,
-                int target,
-                int level,
+                uint target,
+                const std::initializer_list<Parameter>& params = {});
+
+        Texture(uint target,
                 int internalFormat,
                 int width,
                 int height,
-                int format,
-                int type,
-                const std::initializer_list<Parameter>& params);
+                uint format,
+                uint type,
+                const std::initializer_list<Parameter>& params = {});
 
         virtual ~Texture() noexcept = default;
 
         void resize(int, int);
 
-        void bind();
+        void bind() const;
 
-        void unbind();
+        void unbind() const;
 
-        int getId() const noexcept;
+        uint getId() const noexcept;
 
         std::string getPath() const noexcept;
 
-        int getTarget() const noexcept;
-
-        int getLevel() const noexcept;
-
-        int getInternalFormat() const noexcept;
+        uint getTarget() const noexcept;
 
         int getWidth() const noexcept;
 
         int getHeight() const noexcept;
 
-        int getFormat() const noexcept;
-
-        int getType() const noexcept;
-
     private:
-        unsigned int id;
+        uint id;
         std::string path;
-        int target;
-        int level;
+        uint target;
         int internalFormat;
         int width;
         int height;
-        int format;
-        int type;
+        uint format;
+        uint type;
         std::vector<Parameter> params;
-
-        void init();
     };
 }
 

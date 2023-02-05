@@ -21,7 +21,7 @@ namespace renderer {
 
         void detach() const;
 
-        unsigned int getId() const noexcept;
+        uint getId() const noexcept;
 
         std::string getVertexPath() const noexcept;
 
@@ -52,7 +52,7 @@ namespace renderer {
         void uploadTexture(const std::string& varName, int slot) const;
 
     private:
-        unsigned int id;
+        uint id;
         std::string vertexPath;
         std::string fragmentPath;
         std::string vertexSrc;
