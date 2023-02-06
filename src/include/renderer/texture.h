@@ -56,6 +56,8 @@ namespace renderer {
 
         int getHeight() const noexcept;
 
+        operator uint() const noexcept;
+
     private:
         uint id;
         std::string path;

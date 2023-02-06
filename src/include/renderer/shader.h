@@ -7,6 +7,7 @@
 
 #define U_PROJECTION "uProjection"
 #define U_VIEW "uView"
+#define Z_INDEX "zIndex"
 
 namespace renderer {
     class Shader {

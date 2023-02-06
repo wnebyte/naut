@@ -29,6 +29,8 @@ namespace core {
 
         ~PerspectiveCamera() noexcept = default;
 
+        void update(float dt) override;
+
         float getZNear() const noexcept;
 
         void setZNear(float newZNear) noexcept;

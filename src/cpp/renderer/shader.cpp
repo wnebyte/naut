@@ -47,7 +47,7 @@ namespace renderer {
             ifs.close();
             src = ss.str();
         } catch (std::ifstream::failure& e) {
-            std::cerr << "Error: (Shader) Could not open file for: " << path << std::endl;
+            std::cerr << "Error: (Shader) Could not open file for '" << path << "'\nwhat: " << e.what() << std::endl;
             throw e;
         }
 
@@ -55,15 +55,15 @@ namespace renderer {
     }
 
     Shader::Shader(const std::string& vertexPath, const std::string& fragmentPath)
-    : id(0), vertexPath(vertexPath), fragmentPath(fragmentPath),
-      vertexSrc(readifstream(vertexPath)), fragmentSrc(readifstream(fragmentPath)),
-      detached(true)
+        : id(0), vertexPath(vertexPath), fragmentPath(fragmentPath),
+         vertexSrc(readifstream(vertexPath)), fragmentSrc(readifstream(fragmentPath)),
+         detached(true)
     {}
 
     void Shader::compile()
     {
-        GLuint vertexID;
-        GLuint fragmentID;
+        uint vertexID;
+        uint fragmentID;
         const char* cVertexSrc = vertexSrc.c_str();
         const char* cFragmentSrc = fragmentSrc.c_str();
 

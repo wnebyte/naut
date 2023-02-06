@@ -26,18 +26,27 @@ set(SOURCES
         ${INCLUDE_DIRECTORY}/renderer/shader.h
         ${INCLUDE_DIRECTORY}/renderer/texturefwd.h
         ${INCLUDE_DIRECTORY}/renderer/texture.h
+        ${INCLUDE_DIRECTORY}/renderer/primitivesfwd.h
+        ${INCLUDE_DIRECTORY}/renderer/primitives.h
+        ${INCLUDE_DIRECTORY}/renderer/mesh.h
+        ${INCLUDE_DIRECTORY}/renderer/material.h
+        ${INCLUDE_DIRECTORY}/renderer/renderer.h
+        ${INCLUDE_DIRECTORY}/renderer/box.h
+        ${INCLUDE_DIRECTORY}/renderer/boxrenderer.h
         src/cpp/core/window.cpp
         src/cpp/core/camera.cpp
         src/cpp/core/orthocamera.cpp
         src/cpp/core/perspectivecamera.cpp
-        src/cpp/renderer/Shader.cpp
-        src/cpp/renderer/Texture.cpp
+        src/cpp/renderer/shader.cpp
+        src/cpp/renderer/texture.cpp
+        src/cpp/renderer/mesh.cpp
+        src/cpp/renderer/boxrenderer.cpp
         src/cpp/main.cpp
         src/c/glad.c)
 
 add_executable(Naut ${SOURCES})
 
-target_link_libraries(Naut glfw3 ${GL_LIBRARY} m)
+target_link_libraries(Naut glfw3 stb ${GL_LIBRARY} m)
 
 target_include_directories(Naut PRIVATE ${INCLUDE_DIRECTORY})
 

@@ -18,14 +18,22 @@ namespace core {
                                              updateCameraVectors();
                                          }
 
+    void PerspectiveCamera::update(float dt)
+    {
+        updateCameraVectors();
+        Camera::update(dt);
+    }
+
     void PerspectiveCamera::adjustProjection()
     {
+       // projectionMatrix = glm::identity<glm::mat4>();
         projectionMatrix = glm::perspective(glm::radians(zoom), aspect, zNear, zFar);
         inverseProjectionMatrix = glm::inverse(projectionMatrix);
     }
 
     void PerspectiveCamera::adjustView()
     {
+       // viewMatrix = glm::identity<glm::mat4>();
         viewMatrix = glm::lookAt(position, position + forward, up);
         inverseViewMatrix = glm::inverse(viewMatrix);
     }

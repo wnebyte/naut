@@ -72,7 +72,7 @@ namespace renderer {
     }
 
     Texture::Parameter::Parameter(int name, int value) noexcept
-    : name(name), value(value)
+            : name(name), value(value)
     {}
 
     Texture::Texture(const std::string& path, uint target, const std::initializer_list<Parameter>& params)
@@ -137,5 +137,10 @@ namespace renderer {
     int Texture::getHeight() const noexcept
     {
         return height;
+    }
+
+    Texture::operator uint() const noexcept
+    {
+        return id;
     }
 }

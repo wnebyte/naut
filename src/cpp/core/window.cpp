@@ -1,10 +1,17 @@
 #include <glm/vec2.hpp>
+#include <iostream>
 #include "core/window.h"
+#include "core/camera.h"
+#include "core/perspectivecamera.h"
+#include "renderer/shader.h"
+#include "renderer/boxrenderer.h"
 
-#define WIDTH 1920
-#define HEIGHT 1080
+#define DEFAULT_WIDTH 1920
+#define DEFAULT_HEIGHT 1080
 
 namespace core {
+
+    using namespace renderer;
 
     static Window* window = nullptr;
 
@@ -41,7 +48,7 @@ namespace core {
             }
         }
 
-        return found ? glm::ivec2{width, height} : glm::ivec2{WIDTH, HEIGHT};
+        return found ? glm::ivec2{width, height} : glm::ivec2{DEFAULT_WIDTH, DEFAULT_HEIGHT};
     }
 
     Window::Window(const std::string& title, int width, int height)
@@ -105,10 +112,28 @@ namespace core {
 
     void Window::update(float dt)
     {
+        float aspect = static_cast<float>(width) / static_cast<float>(height);
+        Camera* camera = new PerspectiveCamera{{0.0f, 0.0f, 0.0f}, 0.1f, 10000.0f, aspect};
+        Shader shader{"assets/shaders/vertex/vertex2D.glsl",
+                      "assets/shaders/fragment/vertex2D.glsl"};
+        shader.compile();
+        BoxRenderer renderer{};
+        renderer.start();
+        Box box{glm::vec3{0.0f, 0.0f, -5.0f}, glm::vec4{1.0f, 1.0f, 1.0f, 1.0f}};
+
         while (!glfwWindowShouldClose(glfwWindow)) {
+            glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+
+            camera->update(dt);
+            renderer.add(box);
+            renderer.render(camera, shader);
+
             glfwSwapBuffers(glfwWindow);
             glfwPollEvents();
         }
+
+        delete camera;
     }
 
     void Window::destroy()
