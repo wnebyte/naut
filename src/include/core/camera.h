@@ -23,6 +23,12 @@ namespace core {
 
         virtual void update(float dt);
 
+        virtual void handleMouseScroll(float yOffset);
+
+        virtual void handleMouseMovement(float xOffset, float yOffset, bool constrainPitch);
+
+        virtual void handleKeyboard(Movement direction, float dt);
+
         glm::vec3 getPosition() const noexcept;
 
         void setPosition(float x, float y, float z) noexcept;

@@ -7,7 +7,7 @@
 #define DEFAULT_FORWARD glm::vec3{0.0f, 0.0f, -1.0f}
 #define DEFAULT_UP glm::vec3{0.0f, 1.0f, 0.0f}
 #define DEFAULT_RIGHT glm::vec3{1.0f, 0.0f, 0.0f}
-#define DEFAULT_YAW -90.0f
+#define DEFAULT_YAW 0.0f
 #define DEFAULT_PITCH 0.0f
 #define DEFAULT_ZOOM 0.0f
 #define DEFAULT_MOVEMENT_SPEED 2.5f
@@ -30,6 +30,12 @@ namespace core {
         ~PerspectiveCamera() noexcept = default;
 
         void update(float dt) override;
+
+        void handleMouseScroll(float yOffset) override;
+
+        void handleMouseMovement(float xOffset, float yOffset, bool constrainPitch) override;
+
+        void handleKeyboard(Movement movement, float dt) override;
 
         float getZNear() const noexcept;
 

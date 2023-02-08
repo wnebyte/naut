@@ -16,6 +16,11 @@ set(INCLUDE_DIRECTORY src/include)
 set(SOURCES
         ${INCLUDE_DIRECTORY}/core/windowfwd.h
         ${INCLUDE_DIRECTORY}/core/window.h
+        ${INCLUDE_DIRECTORY}/core/scene.h
+        ${INCLUDE_DIRECTORY}/core/mouselistenerfwd.h
+        ${INCLUDE_DIRECTORY}/core/mouselistener.h
+        ${INCLUDE_DIRECTORY}/core/keylistenerfwd.h
+        ${INCLUDE_DIRECTORY}/core/keylistener.h
         ${INCLUDE_DIRECTORY}/core/camerafwd.h
         ${INCLUDE_DIRECTORY}/core/camera.h
         ${INCLUDE_DIRECTORY}/core/orthocamerafwd.h
@@ -33,7 +38,12 @@ set(SOURCES
         ${INCLUDE_DIRECTORY}/renderer/renderer.h
         ${INCLUDE_DIRECTORY}/renderer/box.h
         ${INCLUDE_DIRECTORY}/renderer/boxrenderer.h
+        ${INCLUDE_DIRECTORY}/utility/types.h
+        ${INCLUDE_DIRECTORY}/utility/colors.h
         src/cpp/core/window.cpp
+        src/cpp/core/scene.cpp
+        src/cpp/core/mouselistener.cpp
+        src/cpp/core/keylistener.cpp
         src/cpp/core/camera.cpp
         src/cpp/core/orthocamera.cpp
         src/cpp/core/perspectivecamera.cpp

@@ -26,14 +26,14 @@ namespace core {
 
     void PerspectiveCamera::adjustProjection()
     {
-       // projectionMatrix = glm::identity<glm::mat4>();
+        projectionMatrix = glm::identity<glm::mat4>();
         projectionMatrix = glm::perspective(glm::radians(zoom), aspect, zNear, zFar);
         inverseProjectionMatrix = glm::inverse(projectionMatrix);
     }
 
     void PerspectiveCamera::adjustView()
     {
-       // viewMatrix = glm::identity<glm::mat4>();
+        viewMatrix = glm::identity<glm::mat4>();
         viewMatrix = glm::lookAt(position, position + forward, up);
         inverseViewMatrix = glm::inverse(viewMatrix);
     }
@@ -49,6 +49,44 @@ namespace core {
         right = glm::normalize(forward * wUp);
         // calculate and normalize the new up vector
         up = glm::normalize(right * forward);
+    }
+
+    void PerspectiveCamera::handleMouseScroll(float yOffset)
+    {
+        zoom = glm::clamp(zoom - yOffset, 1.0f, 90.0f);
+    }
+
+    void PerspectiveCamera::handleMouseMovement(float xOffset, float yOffset, bool constrainPitch)
+    {
+        xOffset *= mouseSensitivity;
+        yOffset *= mouseSensitivity;
+        yaw     += 1.7f * xOffset;
+        pitch   += 0.1f * yOffset;
+    }
+
+    void PerspectiveCamera::handleKeyboard(Movement direction, float dt)
+    {
+        float velocity = movementSpeed * dt;
+        switch (direction) {
+            case Camera::Movement::Forward:
+                position += forward * velocity;
+                break;
+            case Movement::Backward:
+                position -= forward * velocity;
+                break;
+            case Movement::Left:
+                position -= right * velocity;
+                break;
+            case Movement::Right:
+                position += right * velocity;
+                break;
+            case Movement::Up:
+                position += up * velocity;
+                break;
+            case Movement::Down:
+                position -= up * velocity;
+                break;
+        }
     }
 
     float PerspectiveCamera::getZNear() const noexcept

@@ -7,6 +7,7 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include "windowfwd.h"
+#include "camerafwd.h"
 
 namespace core {
     class Window {
@@ -22,9 +23,21 @@ namespace core {
 
         void destroy();
 
-        void setWindowTitle(const std::string&);
+        bool shouldClose();
 
-        void setWindowSize(int, int);
+        void setShouldClose(bool value);
+
+        void swapBuffers();
+
+        void pollEvents(float dt);
+
+        void setCursorMode(int value);
+
+        void setCursorPos(double xPos, double yPos);
+
+        void setTitle(const std::string&);
+
+        void setSize(int, int);
 
         std::string getTitle() const noexcept;
 
@@ -37,11 +50,11 @@ namespace core {
         std::string title;
         int width;
         int height;
+        Camera* camera;
 
         explicit Window(const std::string&, int, int);
 
         void init();
-
     };
 
 }

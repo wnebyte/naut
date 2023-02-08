@@ -4,10 +4,10 @@
 namespace core {
 
     Camera::Camera(const glm::vec3& position)
-    : position(position),
-      projectionMatrix(), viewMatrix(),
-      inverseProjectionMatrix(glm::inverse(projectionMatrix)), inverseViewMatrix(glm::inverse(viewMatrix))
-    {}
+            : position(position),
+              projectionMatrix(), viewMatrix(),
+              inverseProjectionMatrix(), inverseViewMatrix()
+              {}
 
     void Camera::update(float dt)
     {
@@ -19,6 +19,15 @@ namespace core {
     {}
 
     void Camera::adjustView()
+    {}
+
+    void Camera::handleMouseScroll(float yOffset)
+    {}
+
+    void Camera::handleMouseMovement(float xOffset, float yOffset, bool constrainPitch)
+    {}
+
+    void Camera::handleKeyboard(Movement direction, float dt)
     {}
 
     glm::vec3 Camera::getPosition() const noexcept

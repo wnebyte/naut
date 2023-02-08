@@ -1,10 +1,13 @@
 #include <glm/vec2.hpp>
 #include <iostream>
 #include "core/window.h"
+#include "core/mouselistener.h"
+#include "core/keylistener.h"
 #include "core/camera.h"
 #include "core/perspectivecamera.h"
 #include "renderer/shader.h"
 #include "renderer/boxrenderer.h"
+#include "utility/colors.h"
 
 #define DEFAULT_WIDTH 1920
 #define DEFAULT_HEIGHT 1080
@@ -27,13 +30,11 @@ namespace core {
 
     static glm::ivec2 getMaxResolution(GLFWmonitor* monitor)
     {
-        int width = 0;
-        int height = 0;
-        int size = 0;
+        int width = 0, height = 0, size = 0;
         bool found = false;
 
         int count;
-        const GLFWvidmode* vidmode = glfwGetVideoModes(monitor, &count);
+        const GLFWvidmode* const vidmode = glfwGetVideoModes(monitor, &count);
         if (vidmode != NULL) {
             for (int i = 0; i < count; ++i) {
                 int w = vidmode[i].width;
@@ -60,11 +61,11 @@ namespace core {
     void Window::init()
     {
         // Setup an error callback
-        glfwSetErrorCallback([](int, const char* msg) { perror(msg); });
+        glfwSetErrorCallback([](int, const char* msg) { std::cerr << msg << std::endl; });
 
         // Initialize GLFW
-        if (glfwInit() == GLFW_FALSE) {
-            perror("Unable to init GLFW.");
+        if (!glfwInit()) {
+            std::cerr << "Unable to initialize GLFW." << std::endl;
             std::exit(EXIT_FAILURE);
         }
 
@@ -73,6 +74,10 @@ namespace core {
             width = res.x;
             height = res.y;
         }
+
+        float aspect = static_cast<float>(width) / static_cast<float>(height);
+        camera = new PerspectiveCamera{{0.0f, 0.0f, 0.0f}, 0.1f, 10000.0f, aspect};
+        MouseListener::init([this](){ return camera; });
 
         // Configure GLFW
         glfwDefaultWindowHints();
@@ -86,7 +91,7 @@ namespace core {
         // Create the window
         glfwWindow = glfwCreateWindow(width, height, title.c_str(), NULL, NULL);
         if (glfwWindow == NULL) {
-            perror("Failed to create GLFW window.");
+            std::cerr << "Failed to create GLFW window." << std::endl;
             std::exit(EXIT_FAILURE);
         }
         // Make OpenGL context current
@@ -94,12 +99,17 @@ namespace core {
 
         // Initialize GLAD
         if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
-            perror("Failed to init GLAD.");
+            std::cerr << "Failed to init GLAD." << std::endl;
             std::exit(EXIT_FAILURE);
         }
 
         // Set callbacks
         glfwSetFramebufferSizeCallback(glfwWindow, NULL);
+        glfwSetCursorPosCallback(glfwWindow, MouseListener::cursorPosCallback);
+        glfwSetMouseButtonCallback(glfwWindow, MouseListener::mouseButtonCallback);
+        glfwSetScrollCallback(glfwWindow, MouseListener::scrollCallback);
+        glfwSetKeyCallback(glfwWindow, KeyListener::keyCallback);
+        glfwSetInputMode(glfwWindow, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
         // Enable v-sync
         glfwSwapInterval(1);
@@ -112,28 +122,38 @@ namespace core {
 
     void Window::update(float dt)
     {
-        float aspect = static_cast<float>(width) / static_cast<float>(height);
-        Camera* camera = new PerspectiveCamera{{0.0f, 0.0f, 0.0f}, 0.1f, 10000.0f, aspect};
         Shader shader{"assets/shaders/vertex/vertex2D.glsl",
                       "assets/shaders/fragment/vertex2D.glsl"};
         shader.compile();
-        BoxRenderer renderer{};
+        BoxRenderer renderer;
         renderer.start();
-        Box box{glm::vec3{0.0f, 0.0f, -5.0f}, glm::vec4{1.0f, 1.0f, 1.0f, 1.0f}};
+        Box box{glm::vec3{0.0f, 0.0f, -5.0f}, WHITE4};
 
-        while (!glfwWindowShouldClose(glfwWindow)) {
-            glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+        camera->update(dt);
+        renderer.add(box);
+        renderer.render(camera, shader);
 
-            camera->update(dt);
-            renderer.add(box);
-            renderer.render(camera, shader);
-
-            glfwSwapBuffers(glfwWindow);
-            glfwPollEvents();
+        if (KeyListener::isKeyBeginPressed(GLFW_KEY_ESCAPE)) {
+            setShouldClose(true);
         }
-
-        delete camera;
+        if (KeyListener::isKeyBeginPressed(GLFW_KEY_W)) {
+            camera->handleKeyboard(Camera::Movement::Forward, dt);
+        }
+        if (KeyListener::isKeyBeginPressed(GLFW_KEY_S)) {
+            camera->handleKeyboard(Camera::Movement::Backward, dt);
+        }
+        if (KeyListener::isKeyBeginPressed(GLFW_KEY_A)) {
+            camera->handleKeyboard(Camera::Movement::Left, dt);
+        }
+        if (KeyListener::isKeyBeginPressed(GLFW_KEY_D)) {
+            camera->handleKeyboard(Camera::Movement::Right, dt);
+        }
+        if (KeyListener::isKeyBeginPressed(GLFW_KEY_SPACE)) {
+            camera->handleKeyboard(Camera::Movement::Up, dt);
+        }
+        if (KeyListener::isKeyBeginPressed(GLFW_KEY_LEFT_CONTROL)) {
+            camera->handleKeyboard(Camera::Movement::Down, dt);
+        }
     }
 
     void Window::destroy()
@@ -141,14 +161,45 @@ namespace core {
         glfwSetErrorCallback(NULL);
         glfwDestroyWindow(glfwWindow);
         glfwTerminate();
+        delete camera;
     }
 
-    void Window::setWindowSize(int newWidth, int newHeight)
+    void Window::swapBuffers()
+    {
+        glfwSwapBuffers(glfwWindow);
+    }
+
+    void Window::pollEvents(float dt)
+    {
+        glfwPollEvents();
+    }
+
+    void Window::setCursorMode(int value)
+    {
+        glfwSetInputMode(glfwWindow, GLFW_CURSOR, value);
+    }
+
+    void Window::setCursorPos(double xPos, double yPos)
+    {
+        glfwSetCursorPos(glfwWindow, xPos, yPos);
+    }
+
+    void Window::setShouldClose(bool value)
+    {
+        glfwSetWindowShouldClose(glfwWindow, value);
+    }
+
+    bool Window::shouldClose()
+    {
+        return glfwWindowShouldClose(glfwWindow);
+    }
+
+    void Window::setSize(int newWidth, int newHeight)
     {
        // framebufferSizeCallback(glfwWindow, newWidth, newHeight);
     }
 
-    void Window::setWindowTitle(const std::string& newTitle)
+    void Window::setTitle(const std::string& newTitle)
     {
         const char* str = newTitle.c_str();
         title = newTitle;
