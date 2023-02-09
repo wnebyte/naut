@@ -1,13 +1,11 @@
-#include <glm/vec2.hpp>
 #include <iostream>
+#include <glm/vec2.hpp>
 #include "core/window.h"
+#include "core/scene.h"
 #include "core/mouselistener.h"
 #include "core/keylistener.h"
 #include "core/camera.h"
-#include "core/perspectivecamera.h"
 #include "renderer/shader.h"
-#include "renderer/boxrenderer.h"
-#include "utility/colors.h"
 
 #define DEFAULT_WIDTH 1920
 #define DEFAULT_HEIGHT 1080
@@ -26,6 +24,11 @@ namespace core {
         } else {
             return nullptr;
         }
+    }
+
+    Window* Window::getWindow()
+    {
+        return window;
     }
 
     static glm::ivec2 getMaxResolution(GLFWmonitor* monitor)
@@ -52,16 +55,22 @@ namespace core {
         return found ? glm::ivec2{width, height} : glm::ivec2{DEFAULT_WIDTH, DEFAULT_HEIGHT};
     }
 
+    static void framebufferSizeCallback(GLFWwindow*, int w, int h)
+    {
+        window->setSize(w, h);
+    }
+
     Window::Window(const std::string& title, int width, int height)
-            : glfwWindow(nullptr), title(title), width(width), height(height)
+            : glfwWindow(nullptr), scene(nullptr), title(title), width(width), height(height)
     {
         init();
+        scene = new Scene{this};
     }
 
     void Window::init()
     {
         // Setup an error callback
-        glfwSetErrorCallback([](int, const char* msg) { std::cerr << msg << std::endl; });
+        glfwSetErrorCallback([](int, const char* msg) { std::cerr << msg << '\n'; });
 
         // Initialize GLFW
         if (!glfwInit()) {
@@ -71,13 +80,11 @@ namespace core {
 
         if (width <= 0 || height <= 0) {
             glm::ivec2 res = getMaxResolution(glfwGetPrimaryMonitor());
-            width = res.x;
+            width  = res.x;
             height = res.y;
         }
 
-        float aspect = static_cast<float>(width) / static_cast<float>(height);
-        camera = new PerspectiveCamera{{0.0f, 0.0f, 0.0f}, 0.1f, 10000.0f, aspect};
-        MouseListener::init([this](){ return camera; });
+        MouseListener::init([this](){ return (scene != nullptr) ? scene->getCamera() : nullptr; });
 
         // Configure GLFW
         glfwDefaultWindowHints();
@@ -99,12 +106,12 @@ namespace core {
 
         // Initialize GLAD
         if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
-            std::cerr << "Failed to init GLAD." << std::endl;
+            std::cerr << "Failed to initialize GLAD." << std::endl;
             std::exit(EXIT_FAILURE);
         }
 
         // Set callbacks
-        glfwSetFramebufferSizeCallback(glfwWindow, NULL);
+        glfwSetFramebufferSizeCallback(glfwWindow, framebufferSizeCallback);
         glfwSetCursorPosCallback(glfwWindow, MouseListener::cursorPosCallback);
         glfwSetMouseButtonCallback(glfwWindow, MouseListener::mouseButtonCallback);
         glfwSetScrollCallback(glfwWindow, MouseListener::scrollCallback);
@@ -122,46 +129,17 @@ namespace core {
 
     void Window::update(float dt)
     {
-        Shader shader{"assets/shaders/vertex/vertex2D.glsl",
-                      "assets/shaders/fragment/vertex2D.glsl"};
-        shader.compile();
-        BoxRenderer renderer;
-        renderer.start();
-        Box box{glm::vec3{0.0f, 0.0f, -5.0f}, WHITE4};
-
-        camera->update(dt);
-        renderer.add(box);
-        renderer.render(camera, shader);
-
-        if (KeyListener::isKeyBeginPressed(GLFW_KEY_ESCAPE)) {
-            setShouldClose(true);
-        }
-        if (KeyListener::isKeyBeginPressed(GLFW_KEY_W)) {
-            camera->handleKeyboard(Camera::Movement::Forward, dt);
-        }
-        if (KeyListener::isKeyBeginPressed(GLFW_KEY_S)) {
-            camera->handleKeyboard(Camera::Movement::Backward, dt);
-        }
-        if (KeyListener::isKeyBeginPressed(GLFW_KEY_A)) {
-            camera->handleKeyboard(Camera::Movement::Left, dt);
-        }
-        if (KeyListener::isKeyBeginPressed(GLFW_KEY_D)) {
-            camera->handleKeyboard(Camera::Movement::Right, dt);
-        }
-        if (KeyListener::isKeyBeginPressed(GLFW_KEY_SPACE)) {
-            camera->handleKeyboard(Camera::Movement::Up, dt);
-        }
-        if (KeyListener::isKeyBeginPressed(GLFW_KEY_LEFT_CONTROL)) {
-            camera->handleKeyboard(Camera::Movement::Down, dt);
+        if (scene != nullptr) {
+            scene->update(dt);
         }
     }
 
     void Window::destroy()
     {
+        delete scene;
         glfwSetErrorCallback(NULL);
         glfwDestroyWindow(glfwWindow);
         glfwTerminate();
-        delete camera;
     }
 
     void Window::swapBuffers()
@@ -172,6 +150,9 @@ namespace core {
     void Window::pollEvents(float dt)
     {
         glfwPollEvents();
+        if (scene != nullptr) {
+            scene->processInput(dt);
+        }
     }
 
     void Window::setCursorMode(int value)
@@ -196,7 +177,9 @@ namespace core {
 
     void Window::setSize(int newWidth, int newHeight)
     {
-       // framebufferSizeCallback(glfwWindow, newWidth, newHeight);
+        width = newWidth;
+        height = newHeight;
+        glViewport(0, 0, width, height);
     }
 
     void Window::setTitle(const std::string& newTitle)
@@ -216,10 +199,20 @@ namespace core {
         return width;
     }
 
-
     int Window::getHeight() const noexcept
     {
         return height;
     }
 
+    float Window::getAspectRatio() const noexcept
+    {
+        float w = static_cast<float>(width);
+        float h = static_cast<float>(height);
+        return w / h;
+    }
+
+    const Scene& Window::getScene() const noexcept
+    {
+        return *scene;
+    }
 }

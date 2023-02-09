@@ -2,6 +2,8 @@
 #define NAUT_BOXRENDERER_H
 
 #include <cstdint>
+#include <glm/vec3.hpp>
+#include <glm/vec4.hpp>
 #include "core/camerafwd.h"
 #include "shaderfwd.h"
 

@@ -4,22 +4,29 @@
 
 namespace core {
 
-    OrthoCamera::OrthoCamera(const glm::vec3& position, int projectionWidth, int projectionHeight)
+    OrthoCamera::OrthoCamera(const glm::vec3& position,
+                             int projectionWidth,
+                             int projectionHeight,
+                             const glm::vec3& viewEye,
+                             const glm::vec3& viewCenter,
+                             const glm::vec3& viewUp)
     : Camera(position),
       projectionWidth(projectionWidth), projectionHeight(projectionHeight),
-      viewEye(), viewCenter(), viewUp()
+      viewEye(viewEye), viewCenter(viewCenter), viewUp(viewUp)
     {}
 
     void OrthoCamera::adjustProjection()
     {
         float halfWidth  = static_cast<float>(projectionWidth)  / 2.0f;
         float halfHeight = static_cast<float>(projectionHeight) / 2.0f;
+        projectionMatrix = glm::identity<glm::mat4>();
         projectionMatrix = glm::ortho(-halfWidth, halfWidth, -halfHeight, halfHeight);
         inverseProjectionMatrix = glm::inverse(projectionMatrix);
     }
 
     void OrthoCamera::adjustView()
     {
+        viewMatrix = glm::identity<glm::mat4>();
         viewMatrix = glm::lookAt(viewEye, viewCenter, viewUp);
         inverseViewMatrix = glm::inverse(viewMatrix);
     }

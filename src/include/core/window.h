@@ -8,15 +8,21 @@
 #include <GLFW/glfw3.h>
 #include "windowfwd.h"
 #include "camerafwd.h"
+#include "scenefwd.h"
 
 namespace core {
     class Window {
     public:
         static Window* newInstance(const std::string&, int = 0, int = 0);
 
+        static Window* getWindow();
+
         Window(const Window&) = delete;
+
         Window& operator=(const Window&) = delete;
+
         Window(Window&&) = delete;
+
         Window& operator=(Window&&) = delete;
 
         void update(float dt);
@@ -45,12 +51,16 @@ namespace core {
 
         int getHeight() const noexcept;
 
+        float getAspectRatio() const noexcept;
+
+        const Scene& getScene() const noexcept;
+
     private:
         GLFWwindow* glfwWindow;
         std::string title;
         int width;
         int height;
-        Camera* camera;
+        Scene* scene;
 
         explicit Window(const std::string&, int, int);
 

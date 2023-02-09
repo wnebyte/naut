@@ -1,6 +1,7 @@
 #include <glm/ext/matrix_clip_space.hpp>
 #include <glm/ext/matrix_transform.hpp>
 #include "core/perspectivecamera.h"
+#include "core/window.h"
 
 namespace core {
 
@@ -27,7 +28,7 @@ namespace core {
     void PerspectiveCamera::adjustProjection()
     {
         projectionMatrix = glm::identity<glm::mat4>();
-        projectionMatrix = glm::perspective(glm::radians(zoom), aspect, zNear, zFar);
+        projectionMatrix = glm::perspective(glm::radians(zoom), Window::getWindow()->getAspectRatio(), zNear, zFar);
         inverseProjectionMatrix = glm::inverse(projectionMatrix);
     }
 
@@ -46,14 +47,15 @@ namespace core {
         forward.z = glm::sin(glm::radians(yaw)) * glm::cos(glm::radians(pitch));
         forward = glm::normalize(forward);
         // calculate and normalize the new right vector
-        right = glm::normalize(forward * wUp);
+        right = glm::normalize(glm::cross(forward, wUp));
         // calculate and normalize the new up vector
-        up = glm::normalize(right * forward);
+        up = glm::normalize(glm::cross(right, forward));
     }
 
     void PerspectiveCamera::handleMouseScroll(float yOffset)
     {
-        zoom = glm::clamp(zoom - yOffset, 1.0f, 90.0f);
+        zoom -= yOffset;
+        zoom = glm::clamp(zoom, 1.0f, 90.0f);
     }
 
     void PerspectiveCamera::handleMouseMovement(float xOffset, float yOffset, bool constrainPitch)
@@ -69,22 +71,22 @@ namespace core {
         float velocity = movementSpeed * dt;
         switch (direction) {
             case Camera::Movement::Forward:
-                position += forward * velocity;
+                position += (forward * velocity);
                 break;
             case Movement::Backward:
-                position -= forward * velocity;
+                position -= (forward * velocity);
                 break;
             case Movement::Left:
-                position -= right * velocity;
+                position -= (right * velocity);
                 break;
             case Movement::Right:
-                position += right * velocity;
+                position += (right * velocity);
                 break;
             case Movement::Up:
-                position += up * velocity;
+                position += (up * velocity);
                 break;
             case Movement::Down:
-                position -= up * velocity;
+                position -= (up * velocity);
                 break;
         }
     }

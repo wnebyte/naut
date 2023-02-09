@@ -4,10 +4,19 @@
 #include "orthocamerafwd.h"
 #include "camera.h"
 
+#define DEFAULT_VIEW_EYE glm::vec3{0.0f, 0.0f, 10.0f}
+#define DEFAULT_VIEW_CENTER glm::vec3{0.0f, 0.0f, 9.0f}
+#define DEFAULT_VIEW_UP glm::vec3{0.0f, 1.0f, 0.0f}
+
 namespace core {
     class OrthoCamera : public Camera {
     public:
-        OrthoCamera(const glm::vec3& position, int projectionWidth, int projectionHeight);
+        OrthoCamera(const glm::vec3& position,
+                    int projectionWidth,
+                    int projectionHeight,
+                    const glm::vec3& viewEye = DEFAULT_VIEW_EYE,
+                    const glm::vec3& viewCenter = DEFAULT_VIEW_CENTER,
+                    const glm::vec3& viewUp = DEFAULT_VIEW_UP);
 
         ~OrthoCamera() noexcept = default;
 
