@@ -2,10 +2,10 @@
 #define NAUT_PRIMITIVESFWD_H
 
 namespace renderer {
-    struct Line2D;
-    struct Line3D;
-    struct Vertex2D;
-    struct Vertex3D;
+    struct Line2;
+    struct Line3;
+    struct Vertex2;
+    struct Vertex3;
 }
 
 #endif //NAUT_PRIMITIVESFWD_H

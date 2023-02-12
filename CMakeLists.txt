@@ -17,52 +17,12 @@ file(GLOB SOURCES CONFIGURE_DEPENDS
         "src/include/*.h"
         "src/include/core/*.h"
         "src/include/render/*.h"
+        "src/include/render/*.inl"
         "src/include/utility/*.h"
         "src/c/*.c"
         "src/cpp/*.cpp"
         "src/cpp/core/*.cpp"
         "src/cpp/renderer/*.cpp")
-
-#set(SOURCES
-#        ${INCLUDE_DIRECTORY}/core/windowfwd.h
-#        ${INCLUDE_DIRECTORY}/core/window.h
-#        ${INCLUDE_DIRECTORY}/core/scene.h
-#        ${INCLUDE_DIRECTORY}/core/mouselistenerfwd.h
-#        ${INCLUDE_DIRECTORY}/core/mouselistener.h
-#        ${INCLUDE_DIRECTORY}/core/keylistenerfwd.h
-#        ${INCLUDE_DIRECTORY}/core/keylistener.h
-#        ${INCLUDE_DIRECTORY}/core/camerafwd.h
-#        ${INCLUDE_DIRECTORY}/core/camera.h
-#        ${INCLUDE_DIRECTORY}/core/orthocamerafwd.h
-#        ${INCLUDE_DIRECTORY}/core/orthocamera.h
-#        ${INCLUDE_DIRECTORY}/core/perspectivecamerafwd.h
-#        ${INCLUDE_DIRECTORY}/core/perspectivecamera.h
-#        ${INCLUDE_DIRECTORY}/renderer/shaderfwd.h
-#        ${INCLUDE_DIRECTORY}/renderer/shader.h
-#        ${INCLUDE_DIRECTORY}/renderer/texturefwd.h
-#        ${INCLUDE_DIRECTORY}/renderer/texture.h
-#        ${INCLUDE_DIRECTORY}/renderer/primitivesfwd.h
-#        ${INCLUDE_DIRECTORY}/renderer/primitives.h
-#        ${INCLUDE_DIRECTORY}/renderer/mesh.h
-#        ${INCLUDE_DIRECTORY}/renderer/material.h
-#        ${INCLUDE_DIRECTORY}/renderer/renderer.h
-#        ${INCLUDE_DIRECTORY}/renderer/box.h
-#        ${INCLUDE_DIRECTORY}/renderer/boxrenderer.h
-#        ${INCLUDE_DIRECTORY}/utility/types.h
-#        ${INCLUDE_DIRECTORY}/utility/colors.h
-#        src/cpp/core/window.cpp
-#        src/cpp/core/scene.cpp
-#        src/cpp/core/mouselistener.cpp
-#        src/cpp/core/keylistener.cpp
-#        src/cpp/core/camera.cpp
-#        src/cpp/core/orthocamera.cpp
-#        src/cpp/core/perspectivecamera.cpp
-#        src/cpp/renderer/shader.cpp
-#        src/cpp/renderer/texture.cpp
-#        src/cpp/renderer/mesh.cpp
-#        src/cpp/renderer/boxrenderer.cpp
-#        src/cpp/main.cpp
-#        src/c/glad.c)
 
 add_executable(Naut ${SOURCES})
 

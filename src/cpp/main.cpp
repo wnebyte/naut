@@ -1,10 +1,26 @@
 #include <cstdlib>
-#include <iostream>
 #include "core/window.h"
 #include "core/mouselistener.h"
 #include "core/keylistener.h"
 
+#include "renderer/batchrenderer.h"
+#include "renderer/batchrendererimpl.inl"
+#include "renderer/box.h"
+#include "renderer/tesselator.h"
+#include "renderer/renderer.h"
+#include <vector>
+
 using namespace core;
+using namespace renderer;
+
+void test() {
+    std::vector<BatchRenderer<Box>> boxes;
+    std::vector<Renderer*> batches;
+
+    for (auto& e : boxes) {
+        batches.push_back(&e);
+    }
+}
 
 int main(int argc, const char *argv[]) {
     Window* window = Window::newInstance("Naut");

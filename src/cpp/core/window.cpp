@@ -67,6 +67,16 @@ namespace core {
         scene = new Scene{this};
     }
 
+    Window::~Window() noexcept
+    {
+        try {
+            delete scene;
+            glfwSetErrorCallback(NULL);
+            glfwDestroyWindow(glfwWindow);
+            glfwTerminate();
+        } catch ( ... ) {}
+    }
+
     void Window::init()
     {
         // Setup an error callback
@@ -132,14 +142,6 @@ namespace core {
         if (scene != nullptr) {
             scene->update(dt);
         }
-    }
-
-    void Window::destroy()
-    {
-        delete scene;
-        glfwSetErrorCallback(NULL);
-        glfwDestroyWindow(glfwWindow);
-        glfwTerminate();
     }
 
     void Window::swapBuffers()

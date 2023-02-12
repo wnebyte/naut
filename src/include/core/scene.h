@@ -5,7 +5,6 @@
 #include "scenefwd.h"
 #include "camerafwd.h"
 #include "renderer/shaderfwd.h"
-#include "renderer/boxrenderer.h"
 
 namespace core {
 
@@ -35,7 +34,6 @@ namespace core {
         Window* window;
         Camera* camera;
         Shader* shader;
-        BoxRenderer renderer;
     };
 }
 

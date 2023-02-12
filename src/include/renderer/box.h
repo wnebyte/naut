@@ -2,20 +2,28 @@
 #define NAUT_BOX_H
 
 #include <glm/vec3.hpp>
-#include "material.h"
-
-typedef uint32_t uint;
+#include <glm/vec4.hpp>
+#include <initializer_list>
+#include "primitives.h"
+#include "vertexattribute.h"
 
 namespace renderer {
     struct Box {
+        class Tesselator {
+        public:
+            typedef BoxVertex3 Type;
+            static std::initializer_list<VertexAttribute> Attrs();
+            static std::size_t Size();
+
+            Tesselator() = default;
+
+            ~Tesselator() noexcept = default;
+
+            void tesselate(const Box&, std::size_t, Type data[]) const;
+        };
+
         glm::vec3 position;
-        glm::vec3 scale;
-        Material top;
-        Material bottom;
-        Material right;
-        Material left;
-        Material front;
-        Material back;
+        glm::vec4 color;
     };
 }
 

@@ -10,10 +10,7 @@
 typedef uint32_t uint;
 
 namespace renderer {
-    struct Box {
-        glm::vec3 position;
-        glm::vec4 color;
-    };
+    struct Box;
 
     class BoxRenderer {
     public:
@@ -21,7 +18,7 @@ namespace renderer {
 
         ~BoxRenderer() noexcept;
 
-        void start();
+        void init();
 
         void render(const core::Camera* const, const Shader&);
 
@@ -30,15 +27,12 @@ namespace renderer {
         std::size_t size() const noexcept;
 
     private:
-        struct Vertex {
-            glm::vec3 position;
-            glm::vec4 color;
-        };
+        struct Vertex;
 
         uint vao;
         uint vbo;
         std::size_t sz;
-        bool started;
+        bool initialized;
         Vertex* data;
 
         void tesselate(const Box& box);

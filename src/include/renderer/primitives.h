@@ -8,23 +8,28 @@
 
 namespace renderer {
 
-    struct Line2D {
+    struct Line2 {
         glm::vec2 position;
     };
 
-    struct Line3D {
+    struct Line3 {
         glm::vec3 position;
     };
 
-    struct Vertex2D {
+    struct Vertex2 {
         glm::vec2 position;
         glm::vec2 uv;
     };
 
-    struct Vertex3D {
+    struct Vertex3 {
         glm::vec3 position;
         glm::vec3 normal;
         glm::vec2 uv;
+    };
+
+    struct BoxVertex3 {
+        glm::vec3 position;
+        glm::vec4 color;
     };
 }
 

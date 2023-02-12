@@ -11,15 +11,15 @@ typedef uint32_t uint;
 namespace renderer {
     class Mesh {
     public:
-        std::vector<Vertex3D> vertices;
+        std::vector<Vertex3> vertices;
         std::vector<uint> indices;
         std::vector<Texture> textures;
 
-        Mesh(const std::vector<Vertex3D>& vertices,
+        Mesh(const std::vector<Vertex3>& vertices,
              const std::vector<uint>& indices,
              const std::vector<Texture>& textures);
 
-        void draw(const Shader& shader);
+        void render(const Shader& shader);
 
     private:
         uint vao;

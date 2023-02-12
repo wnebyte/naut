@@ -17,6 +17,8 @@ namespace core {
 
         static Window* getWindow();
 
+        ~Window() noexcept;
+
         Window(const Window&) = delete;
 
         Window& operator=(const Window&) = delete;
@@ -26,8 +28,6 @@ namespace core {
         Window& operator=(Window&&) = delete;
 
         void update(float dt);
-
-        void destroy();
 
         bool shouldClose();
 

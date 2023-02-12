@@ -1,3 +1,4 @@
+#if 0
 #include <memory>
 #include <glad/glad.h>
 #include <glm/vec3.hpp>
@@ -12,14 +13,14 @@ namespace renderer {
     using core::Camera;
 
     static const glm::vec3 VEC3S[8] = {
-            {glm::vec3{-0.5f,0.5f, 0.5f}  },
-            {glm::vec3{0.5f, 0.5f, 0.5f}  },
-            {glm::vec3{-0.5f,-0.5f,0.5f}  },
-            {glm::vec3{0.5f, -0.5f,0.5f}  },
-            {glm::vec3{-0.5f,0.5f, -0.5f} },
-            {glm::vec3{0.5f, 0.5f, -0.5f} },
-            {glm::vec3{-0.5f,-0.5f,-0.5f} },
-            {glm::vec3{0.5f, -0.5f,-0.5f} },
+            glm::vec3{-0.5f,0.5f, 0.5f},
+            glm::vec3{0.5f, 0.5f, 0.5f},
+            glm::vec3{-0.5f,-0.5f,0.5f},
+            glm::vec3{0.5f, -0.5f,0.5f},
+            glm::vec3{-0.5f,0.5f, -0.5f},
+            glm::vec3{0.5f, 0.5f, -0.5f},
+            glm::vec3{-0.5f,-0.5f,-0.5f},
+            glm::vec3{0.5f, -0.5f,-0.5f},
     };
 
     static const unsigned int INDICES[36] = {
@@ -31,7 +32,7 @@ namespace renderer {
             3, 2, 6, 7, 3, 6
     };
 
-    static glm::vec3* get(const glm::vec3& position, const glm::vec3& scale)
+    static glm::vec3* getDistinctPositions(const glm::vec3& position, const glm::vec3& scale)
     {
         static const uint sz = 8;
         glm::vec3* vertices = new glm::vec3[sz];
@@ -48,7 +49,7 @@ namespace renderer {
     }
 
     BoxRenderer::BoxRenderer()
-        : vao(0), vbo(0), sz(0), started(false), data(new Vertex[MAX_BATCH_SIZE * 36]) {}
+        : vao(0), vbo(0), sz(0), initialized(false), data(new Vertex[MAX_BATCH_SIZE * 36]) {}
 
     BoxRenderer::~BoxRenderer() noexcept
     {
@@ -57,7 +58,7 @@ namespace renderer {
         } catch ( ... ) {}
     }
 
-    void BoxRenderer::start()
+    void BoxRenderer::init()
     {
         glGenVertexArrays(1, &vao);
         glBindVertexArray(vao);
@@ -72,7 +73,7 @@ namespace renderer {
         glVertexAttribPointer(1, 4, GL_FLOAT, false, sizeof(Vertex), (void*)offsetof(Vertex, color));
         glEnableVertexAttribArray(1);
 
-        started = true;
+        initialized = true;
     }
 
     void BoxRenderer::render(const Camera* const camera, const Shader& shader)
@@ -80,8 +81,8 @@ namespace renderer {
         if (sz <= 0) {
             return;
         }
-        if (!started) {
-            start();
+        if (!initialized) {
+            init();
         }
         glBindBuffer(GL_ARRAY_BUFFER, vbo);
         glBufferSubData(GL_ARRAY_BUFFER, 0, sz * 36 * sizeof(Vertex), (void*)data);
@@ -108,15 +109,14 @@ namespace renderer {
         }
     }
 
-    void BoxRenderer::tesselate(const Box &box)
+    void BoxRenderer::tesselate(const Box& box)
     {
-        std::unique_ptr<glm::vec3[]> ptr{get(box.position, glm::vec3{1.0f, 1.0f, 1.0f})};
+        std::unique_ptr<glm::vec3[]> ptr{getDistinctPositions(box.position, glm::vec3{1.0f, 1.0f, 1.0f})};
         uint offset = sz * 36;
 
         for (uint i = 0; i < 36; ++i) {
             uint index = INDICES[i];
             glm::vec3 pos = ptr[index];
-            Vertex vertex;
             data[offset++] = Vertex{pos, box.color};
         }
     }
@@ -126,3 +126,4 @@ namespace renderer {
         return sz;
     }
 }
+#endif

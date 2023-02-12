@@ -7,6 +7,8 @@
 #include "renderer/boxrenderer.h"
 #include "renderer/shader.h"
 #include "utility/colors.h"
+#include "renderer/batchrenderer.h"
+#include "renderer/box.h"
 
 namespace core {
 
@@ -24,26 +26,21 @@ namespace core {
 
     static const float zFar = 10000;
 
-    static const float aspect = 1.0f;
-
     static const float debounceTime = 2.0f;
 
     static float debounce = debounceTime;
 
     static PerspectiveCamera perspective{position, zNear, zFar, 1980.0f / 1080.0f};
 
-    static void printVec3(const glm::vec3& vec) {
-        std::cout << "vec3[x: " << vec.x << ", y: " << vec.y << ", z: " << vec.z << "]\n";
-    }
+    static BatchRenderer<Box> renderer{};
 
     Scene::Scene(Window* window)
     : camera(&perspective),
     //camera(new PerspectiveCamera{position, zNear, zFar, aspect}),
       shader(new Shader{vertexPath, fragmentPath}),
-      window(window),
-      renderer() {
+      window(window) {
         shader->compile();
-        renderer.start();
+        renderer.init();
     }
 
     Scene::~Scene() noexcept {
@@ -57,7 +54,7 @@ namespace core {
         debounce -= dt;
         camera->update(dt);
         renderer.add(box);
-        renderer.render(camera, *shader);
+        renderer.render(*camera, *shader);
 
         if (debounce <= 0) {
 //            std::cout << "yaw: " << perspective.getYaw() << "\n";
