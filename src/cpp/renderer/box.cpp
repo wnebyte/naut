@@ -2,7 +2,7 @@
 #include <glad/glad.h>
 #include "renderer/box.h"
 
-#define SIZE 36
+#define SIZE  36u
 #define SCALE glm::vec3{1.0f, 1.0f, 1.0f}
 
 namespace renderer {
@@ -43,25 +43,39 @@ namespace renderer {
         return vertices;
     }
 
-    std::initializer_list<VertexAttribute> Box::Tesselator::Attrs() {
-        static std::initializer_list<VertexAttribute> attr{
-                VertexAttribute{0, 3, GL_FLOAT, sizeof(Type), (void*)0},
-                VertexAttribute{1, 4, GL_FLOAT, sizeof(Type), (void*)offsetof(Type, color)}
-        };
-        return attr;
+    static std::array<glm::vec3, 8> getDistinctVertices(const glm::vec3& position,
+                                                        const glm::vec3& scale) {
+        std::array<glm::vec3, 8> vertices;
+        for (uint i = 0; i < 8; ++i) {
+            glm::vec3 v = VEC3S[i];
+            glm::vec3 pos{position.x + (v.x * scale.x),
+                          position.y + (v.y * scale.y),
+                          position.z + (v.z * scale.z)};
+            vertices[i] = pos;
+        }
+
+        return vertices;
     }
 
-    std::size_t Box::Tesselator::Size() {
+    std::initializer_list<VertexAttribute> Box::Tesselator::attrs() {
+        static std::initializer_list<VertexAttribute> attrs{
+                VertexAttribute{3, GL_FLOAT, sizeof(Type), (void*)0},
+                VertexAttribute{4, GL_FLOAT, sizeof(Type), (void*)offsetof(Type, color)}
+        };
+        return attrs;
+    }
+
+    std::size_t Box::Tesselator::size() {
         return SIZE;
     }
 
     void Box::Tesselator::tesselate(const Box& box, std::size_t position_t, Type* data) const {
-        std::unique_ptr<glm::vec3[]> ptr{getDistinctPositions(box.position, SCALE)};
-        uint offset = position_t * SIZE;
+        std::array<glm::vec3, 8> vertices = getDistinctVertices(box.position, SCALE);
+        uint32_t offset = position_t * SIZE;
 
-        for (uint i = 0; i < 36; ++i) {
+        for (uint32_t i = 0; i < 36; ++i) {
             uint index = INDICES[i];
-            data[offset++] = Type{ptr[index], box.color};
+            data[offset++] = Type{vertices[index], box.color};
         }
     }
 }

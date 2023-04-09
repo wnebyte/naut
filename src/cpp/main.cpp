@@ -1,25 +1,27 @@
 #include <cstdlib>
+#include <vector>
 #include "core/window.h"
 #include "core/mouselistener.h"
 #include "core/keylistener.h"
-
 #include "renderer/batchrenderer.h"
-#include "renderer/batchrendererimpl.inl"
 #include "renderer/box.h"
-#include "renderer/tesselator.h"
 #include "renderer/renderer.h"
-#include <vector>
+#include "renderer/primitives.h"
 
 using namespace core;
 using namespace renderer;
 
 void test() {
     std::vector<BatchRenderer<Box>> boxes;
+    std::vector<BatchRenderer<Vertex2>> vertices;
     std::vector<Renderer*> batches;
 
     for (auto& e : boxes) {
         batches.push_back(&e);
     }
+
+    BatchRenderer<Vertex2> batch = vertices[0];
+    batch.add(Vertex2{{}, {}, {}, 0});
 }
 
 int main(int argc, const char *argv[]) {

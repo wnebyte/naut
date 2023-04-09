@@ -16,8 +16,7 @@ namespace core {
 
     static Window* window = nullptr;
 
-    Window* Window::newInstance(const std::string& title, int width, int height)
-    {
+    Window* Window::newInstance(const std::string& title, int width, int height) {
         if (window == nullptr) {
             window = new Window{title, width, height};
             return window;
@@ -26,13 +25,11 @@ namespace core {
         }
     }
 
-    Window* Window::getWindow()
-    {
+    Window* Window::getInstance() {
         return window;
     }
 
-    static glm::ivec2 getMaxResolution(GLFWmonitor* monitor)
-    {
+    static glm::ivec2 getMaxResolution(GLFWmonitor* monitor) {
         int width = 0, height = 0, size = 0;
         bool found = false;
 
@@ -55,20 +52,17 @@ namespace core {
         return found ? glm::ivec2{width, height} : glm::ivec2{DEFAULT_WIDTH, DEFAULT_HEIGHT};
     }
 
-    static void framebufferSizeCallback(GLFWwindow*, int w, int h)
-    {
+    static void framebufferSizeCallback(GLFWwindow*, int w, int h) {
         window->setSize(w, h);
     }
 
     Window::Window(const std::string& title, int width, int height)
-            : glfwWindow(nullptr), scene(nullptr), title(title), width(width), height(height)
-    {
+            : glfwWindow(nullptr), scene(nullptr), title(title), width(width), height(height) {
         init();
         scene = new Scene{this};
     }
 
-    Window::~Window() noexcept
-    {
+    Window::~Window() noexcept {
         try {
             delete scene;
             glfwSetErrorCallback(NULL);
@@ -77,8 +71,7 @@ namespace core {
         } catch ( ... ) {}
     }
 
-    void Window::init()
-    {
+    void Window::init() {
         // Setup an error callback
         glfwSetErrorCallback([](int, const char* msg) { std::cerr << msg << '\n'; });
 
@@ -137,84 +130,70 @@ namespace core {
         glViewport(0, 0, width, height);
     }
 
-    void Window::update(float dt)
-    {
+    void Window::update(float dt) {
         if (scene != nullptr) {
             scene->update(dt);
         }
     }
 
-    void Window::swapBuffers()
-    {
+    void Window::swapBuffers() {
         glfwSwapBuffers(glfwWindow);
     }
 
-    void Window::pollEvents(float dt)
-    {
+    void Window::pollEvents(float dt) {
         glfwPollEvents();
         if (scene != nullptr) {
             scene->processInput(dt);
         }
     }
 
-    void Window::setCursorMode(int value)
-    {
+    void Window::setCursorMode(int value) {
         glfwSetInputMode(glfwWindow, GLFW_CURSOR, value);
     }
 
-    void Window::setCursorPos(double xPos, double yPos)
-    {
+    void Window::setCursorPos(double xPos, double yPos) {
         glfwSetCursorPos(glfwWindow, xPos, yPos);
     }
 
-    void Window::setShouldClose(bool value)
-    {
+    void Window::setShouldClose(bool value) {
         glfwSetWindowShouldClose(glfwWindow, value);
     }
 
-    bool Window::shouldClose()
-    {
+    bool Window::shouldClose() {
         return glfwWindowShouldClose(glfwWindow);
     }
 
-    void Window::setSize(int newWidth, int newHeight)
-    {
+    void Window::setSize(int newWidth, int newHeight) {
         width = newWidth;
         height = newHeight;
         glViewport(0, 0, width, height);
     }
 
-    void Window::setTitle(const std::string& newTitle)
-    {
+    void Window::setTitle(const std::string& newTitle) {
         const char* str = newTitle.c_str();
         title = newTitle;
         glfwSetWindowTitle(glfwWindow, str);
     }
 
-    std::string Window::getTitle() const noexcept
-    {
+    std::string Window::getTitle() const noexcept {
         return title;
     }
 
-    int Window::getWidth() const noexcept
-    {
+    int Window::getWidth() const noexcept {
         return width;
     }
 
-    int Window::getHeight() const noexcept
-    {
+    int Window::getHeight() const noexcept {
         return height;
     }
 
-    float Window::getAspectRatio() const noexcept
-    {
+    float Window::getAspectRatio() const noexcept {
         float w = static_cast<float>(width);
         float h = static_cast<float>(height);
         return w / h;
     }
 
-    const Scene& Window::getScene() const noexcept
-    {
+    const Scene& Window::getScene() const noexcept {
         return *scene;
     }
 }

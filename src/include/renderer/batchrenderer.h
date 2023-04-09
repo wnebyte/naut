@@ -4,9 +4,8 @@
 #include <initializer_list>
 #include "core/camerafwd.h"
 #include "shaderfwd.h"
-#include "vertexattribute.h"
-#include "utility/types.h"
 #include "renderer.h"
+#include "defs.h"
 
 namespace renderer {
 
@@ -28,14 +27,17 @@ namespace renderer {
         std::size_t size() const noexcept;
 
     private:
-        uint vao;
-        uint vbo;
-        typename T::Tesselator::Type* data;
+        typedef typename T::Tesselator Tesselator;
+        uint32_t vao;
+        uint32_t vbo;
+        Tesselator tesselator;
+        typename Tesselator::Type* data;
         std::size_t sz;
         bool initialized;
+        int32_t zIndex;
     };
 }
 
-#include "batchrendererimpl.inl"
+#include "batchrenderer.inl"
 
 #endif //NAUT_BATCHRENDERER_H

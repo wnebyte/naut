@@ -24,7 +24,15 @@ file(GLOB SOURCES CONFIGURE_DEPENDS
         "src/cpp/core/*.cpp"
         "src/cpp/renderer/*.cpp")
 
-add_executable(Naut ${SOURCES})
+add_executable(Naut ${SOURCES}
+        src/include/utility/assets.h
+        src/cpp/utility/assets.cpp
+        src/cpp/renderer/primitives.cpp
+        src/include/renderer/myrenderer.h
+        src/include/renderer/tesselator.h
+        src/include/renderer/tesselator.inl
+        src/include/renderer/batchrenderer.h
+        src/include/renderer/batchrenderer.inl src/include/utility/cmath.h src/cpp/utility/cmath.cpp src/cpp/renderer/myrenderer.cpp)
 
 target_link_libraries(Naut glfw3 stb ${GL_LIBRARY} m)
 

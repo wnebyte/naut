@@ -12,12 +12,8 @@ namespace renderer {
         class Tesselator {
         public:
             typedef BoxVertex3 Type;
-            static std::initializer_list<VertexAttribute> Attrs();
-            static std::size_t Size();
-
-            Tesselator() = default;
-
-            ~Tesselator() noexcept = default;
+            static std::initializer_list<VertexAttribute> attrs();
+            static std::size_t size();
 
             void tesselate(const Box&, std::size_t, Type data[]) const;
         };

@@ -1,10 +1,12 @@
-#ifndef NAUT_BATCHRENDERERIMPL_INL
-#define NAUT_BATCHRENDERERIMPL_INL
+#ifndef NAUT_BATCHRENDERER_INL
+#define NAUT_BATCHRENDERER_INL
 
+#include <glad/glad.h>
 #include "batchrenderer.h"
 #include "core/camera.h"
 #include "shader.h"
 #include "vertexattribute.h"
+#include "primitives.h"
 
 #define MAX_BATCH_SIZE 400
 
@@ -12,8 +14,8 @@ namespace renderer {
 
     template<typename T>
     BatchRenderer<T>::BatchRenderer()
-    : vao(0), vbo(0), initialized(false), sz(0),
-      data(new typename T::Tesselator::Type[MAX_BATCH_SIZE * T::Tesselator::Size()]) {}
+    : vao(0), vbo(0), sz(0), initialized(false), zIndex(0), tesselator(Tesselator{}),
+      data(new typename T::Tesselator::Type[MAX_BATCH_SIZE * T::Tesselator::size()]) {}
 
     template<typename T>
     BatchRenderer<T>::~BatchRenderer() noexcept {
@@ -31,15 +33,17 @@ namespace renderer {
 
         glGenBuffers(1, &vbo);
         glBindBuffer(GL_ARRAY_BUFFER, vbo);
-        glBufferData(GL_ARRAY_BUFFER, MAX_BATCH_SIZE * T::Tesselator::Size() * sizeof(typename T::Tesselator::Type), NULL, GL_DYNAMIC_DRAW);
+        glBufferData(GL_ARRAY_BUFFER, MAX_BATCH_SIZE * T::Tesselator::size() * sizeof(typename T::Tesselator::Type), NULL, GL_DYNAMIC_DRAW);
 
-        for (auto& attr : T::Tesselator::Attrs()) {
+        uint32_t i = 0;
+        for (auto& attr : T::Tesselator::attrs()) {
             if (attr.type == GL_FLOAT) {
-                glVertexAttribPointer(attr.index, attr.size, GL_FLOAT, false, attr.stride, attr.offset);
+                glVertexAttribPointer(i, attr.size, GL_FLOAT, false, attr.stride, attr.offset);
             } else {
-                glVertexAttribIPointer(attr.index, attr.size, attr.type, attr.stride, attr.offset);
+                glVertexAttribIPointer(i, attr.size, attr.type, attr.stride, attr.offset);
             }
-            glEnableVertexAttribArray(attr.index);
+            glEnableVertexAttribArray(i);
+            ++i;
         }
 
         initialized = true;
@@ -54,14 +58,22 @@ namespace renderer {
             init();
         }
         glBindBuffer(GL_ARRAY_BUFFER, vbo);
-        glBufferSubData(GL_ARRAY_BUFFER, 0, sz * T::Tesselator::Size() * sizeof(typename T::Tesselator::Type), (void*)data);
+        glBufferSubData(GL_ARRAY_BUFFER, 0, sz * Tesselator::size() * sizeof(typename Tesselator::Type), (void*)data);
 
         shader.use();
         shader.uploadMat4(U_VIEW, camera.getViewMatrix());
         shader.uploadMat4(U_PROJECTION, camera.getProjectionMatrix());
 
         glBindVertexArray(vao);
-        glDrawArrays(GL_TRIANGLES, 0, sz * T::Tesselator::Size());
+        /*
+         * mode - Specifies what kind of primitives to render.
+         * Symbolic constants GL_POINTS, GL_LINE_STRIP, GL_LINE_LOOP, GL_LINES, GL_LINE_STRIP_ADJACENCY,
+         * GL_LINES_ADJACENCY, GL_TRIANGLE_STRIP, GL_TRIANGLE_FAN, GL_TRIANGLES, GL_TRIANGLE_STRIP_ADJACENCY,
+         * GL_TRIANGLES_ADJACENCY and GL_PATCHES are accepted.
+         * first - Specifies the starting index in the enabled arrays.
+         * count -  Specifies the number of indices to be rendered.
+         */
+        glDrawArrays(GL_TRIANGLES, 0, sz * Tesselator::size() * sizeof(typename Tesselator::Type));
         glBindVertexArray(0);
         sz = 0;
         shader.detach();
@@ -70,7 +82,6 @@ namespace renderer {
     template<typename T>
     bool BatchRenderer<T>::add(const T& t) {
         if (sz < MAX_BATCH_SIZE) {
-            typename T::Tesselator tesselator{};
             tesselator.tesselate(t, sz, data);
             ++sz;
             return true;
@@ -85,4 +96,4 @@ namespace renderer {
     }
 }
 
-#endif //NAUT_BATCHRENDERERIMPL_INL
+#endif //NAUT_BATCHRENDERER_INL

@@ -9,9 +9,11 @@ using Camera = core::Camera;
 namespace renderer {
     class Renderer {
     public:
+        Renderer() = default;
+
         virtual ~Renderer() = default;
 
-        virtual void render(const Camera&, const Shader&) {}
+        virtual void render(const Camera&, const Shader&) = 0;
     };
 }
 

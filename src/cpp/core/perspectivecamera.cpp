@@ -28,7 +28,7 @@ namespace core {
     void PerspectiveCamera::adjustProjection()
     {
         projectionMatrix = glm::identity<glm::mat4>();
-        projectionMatrix = glm::perspective(glm::radians(zoom), Window::getWindow()->getAspectRatio(), zNear, zFar);
+        projectionMatrix = glm::perspective(glm::radians(zoom), Window::getInstance()->getAspectRatio(), zNear, zFar);
         inverseProjectionMatrix = glm::inverse(projectionMatrix);
     }
 

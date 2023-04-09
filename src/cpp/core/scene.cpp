@@ -14,7 +14,7 @@ namespace core {
 
     using namespace renderer;
 
-    static const Box box{glm::vec3{0.0f, 0.0f, -5.0f}, WHITE4};
+    static const Box box{glm::vec3{0.0f, 0.0f, -5.0f}, WHITE_RGBA};
 
     static const std::string vertexPath{"assets/shaders/vertex/vertex2D.glsl"};
 

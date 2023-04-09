@@ -15,7 +15,7 @@ namespace core {
     public:
         static Window* newInstance(const std::string&, int = 0, int = 0);
 
-        static Window* getWindow();
+        static Window* getInstance();
 
         ~Window() noexcept;
 
