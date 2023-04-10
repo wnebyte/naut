@@ -5,6 +5,7 @@
 #include "core/camerafwd.h"
 #include "shaderfwd.h"
 #include "renderer.h"
+#include "vertexattribute.h"
 #include "defs.h"
 
 namespace renderer {
@@ -14,27 +15,28 @@ namespace renderer {
     template<typename T>
     class BatchRenderer : public Renderer {
     public:
-        BatchRenderer();
+        BatchRenderer(const std::initializer_list<VertexAttribute>&, Camera*, Shader*);
 
         ~BatchRenderer() noexcept;
 
         void init();
 
-        void render(const Camera&, const Shader&) override;
+        void render() override;
 
         bool add(const T&);
 
         std::size_t size() const noexcept;
 
     private:
-        typedef typename T::Tesselator Tesselator;
         uint32_t vao;
         uint32_t vbo;
-        Tesselator tesselator;
-        typename Tesselator::Type* data;
+        T* data;
         std::size_t sz;
         bool initialized;
         int32_t zIndex;
+        std::vector<VertexAttribute> attrs;
+        Camera* camera;
+        Shader* shader;
     };
 }
 

@@ -13,7 +13,7 @@ namespace renderer {
 
         virtual ~Renderer() = default;
 
-        virtual void render(const Camera&, const Shader&) = 0;
+        virtual void render() = 0;
     };
 }
 

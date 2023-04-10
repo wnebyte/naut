@@ -13,9 +13,9 @@
 namespace renderer {
 
     template<typename T>
-    BatchRenderer<T>::BatchRenderer()
-    : vao(0), vbo(0), sz(0), initialized(false), zIndex(0), tesselator(Tesselator{}),
-      data(new typename T::Tesselator::Type[MAX_BATCH_SIZE * T::Tesselator::size()]) {}
+    BatchRenderer<T>::BatchRenderer(const std::initializer_list<VertexAttribute>& attrs, Camera *camera, Shader *shader)
+    : vao(0), vbo(0), sz(0), initialized(false), zIndex(0), attrs(attrs), camera(camera), shader(shader),
+      data(new T[MAX_BATCH_SIZE]) {}
 
     template<typename T>
     BatchRenderer<T>::~BatchRenderer() noexcept {
@@ -33,10 +33,10 @@ namespace renderer {
 
         glGenBuffers(1, &vbo);
         glBindBuffer(GL_ARRAY_BUFFER, vbo);
-        glBufferData(GL_ARRAY_BUFFER, MAX_BATCH_SIZE * T::Tesselator::size() * sizeof(typename T::Tesselator::Type), NULL, GL_DYNAMIC_DRAW);
+        glBufferData(GL_ARRAY_BUFFER, MAX_BATCH_SIZE * sizeof(T), NULL, GL_DYNAMIC_DRAW);
 
         uint32_t i = 0;
-        for (auto& attr : T::Tesselator::attrs()) {
+        for (auto& attr : attrs) {
             if (attr.type == GL_FLOAT) {
                 glVertexAttribPointer(i, attr.size, GL_FLOAT, false, attr.stride, attr.offset);
             } else {
@@ -50,7 +50,7 @@ namespace renderer {
     }
 
     template<typename T>
-    void BatchRenderer<T>::render(const Camera& camera, const Shader& shader) {
+    void BatchRenderer<T>::render() {
         if (sz == 0) {
             return;
         }
@@ -58,11 +58,11 @@ namespace renderer {
             init();
         }
         glBindBuffer(GL_ARRAY_BUFFER, vbo);
-        glBufferSubData(GL_ARRAY_BUFFER, 0, sz * Tesselator::size() * sizeof(typename Tesselator::Type), (void*)data);
+        glBufferSubData(GL_ARRAY_BUFFER, 0, sz * sizeof(T), (void*)data);
 
-        shader.use();
-        shader.uploadMat4(U_VIEW, camera.getViewMatrix());
-        shader.uploadMat4(U_PROJECTION, camera.getProjectionMatrix());
+        shader->use();
+        shader->uploadMat4(U_VIEW, camera->getViewMatrix());
+        shader->uploadMat4(U_PROJECTION, camera->getProjectionMatrix());
 
         glBindVertexArray(vao);
         /*
@@ -73,17 +73,16 @@ namespace renderer {
          * first - Specifies the starting index in the enabled arrays.
          * count -  Specifies the number of indices to be rendered.
          */
-        glDrawArrays(GL_TRIANGLES, 0, sz * Tesselator::size() * sizeof(typename Tesselator::Type));
+        glDrawArrays(GL_TRIANGLES, 0, sz);
         glBindVertexArray(0);
         sz = 0;
-        shader.detach();
+        shader->detach();
     }
 
     template<typename T>
     bool BatchRenderer<T>::add(const T& t) {
         if (sz < MAX_BATCH_SIZE) {
-            tesselator.tesselate(t, sz, data);
-            ++sz;
+            data[sz++] = t;
             return true;
         } else {
             return false;

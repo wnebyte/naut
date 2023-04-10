@@ -10,39 +10,32 @@
 
 namespace renderer {
 
-    struct Line2 {
-        class Tesselator {
-        public:
-            typedef Line2 Type;
-            static std::initializer_list<VertexAttribute> attrs();
-            static std::size_t size();
-
-            Tesselator() = default;
-
-            ~Tesselator() noexcept = default;
-
-            void tesselate(const Line2&, size_t, Type*) const;
-        };
-
+    struct gl_Line2 {
         glm::vec2 position;
         glm::vec4 color;
     };
 
-    struct Line3 {
+    struct Line2 {
+        glm::vec2 start;
+        glm::vec2 end;
+        glm::vec4 color;
+        int64_t zIndex;
+        float width;
+    };
+
+    struct gl_Line3 {
         glm::vec3 position;
         glm::vec4 color;
     };
 
+    struct Line3 {
+        glm::vec3 start;
+        glm::vec4 end;
+        glm::vec4 color;
+        float width;
+    };
+
     struct Vertex2 {
-        class Tesselator {
-        public:
-            typedef Vertex2 Type;
-            static std::initializer_list<VertexAttribute> attrs();
-            static std::size_t size();
-
-            void tesselate(const Vertex2&, size_t, Type*) const;
-        };
-
         glm::vec2 position;
         glm::vec4 color;
         glm::vec2 uv;
