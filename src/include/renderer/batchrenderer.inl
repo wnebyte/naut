@@ -9,13 +9,40 @@
 #include "primitives.h"
 
 #define MAX_BATCH_SIZE 400
+#define NO_TEX_ID      -1
 
 namespace renderer {
 
     template<typename T>
-    BatchRenderer<T>::BatchRenderer(const std::initializer_list<VertexAttribute>& attrs, Camera *camera, Shader *shader)
-    : vao(0), vbo(0), sz(0), initialized(false), zIndex(0), attrs(attrs), camera(camera), shader(shader),
-      data(new T[MAX_BATCH_SIZE]) {}
+    static constexpr auto getTexId(T* obj) -> decltype( obj->texId, std::true_type{} ) {
+        return obj->texId;
+    }
+
+    static constexpr auto getTexId(...) -> int32_t {
+        return NO_TEX_ID;
+    }
+
+
+    static int32_t getTexIndex(const std::array<int32_t, N_TEXTURES>& array, const int32_t texId) {
+        std::array<int32_t, N_TEXTURES>::const_iterator cit = array.begin();
+        int32_t i = 0;
+
+        do {
+            if (*cit == texId) {
+                return i;
+            }
+            ++i;
+        } while (cit++ != array.end());
+
+        return NO_TEX_ID;
+    }
+
+    template<typename T>
+    BatchRenderer<T>::BatchRenderer(std::shared_ptr<Camera> camera, std::shared_ptr<Shader> shader, uint32_t mode)
+    : vao(0), vbo(0), mode(mode), n(0), initialized(false), textures(), camera(camera), shader(shader),
+      data(new T[MAX_BATCH_SIZE]) {
+          textures.fill(NO_TEX_ID);
+      }
 
     template<typename T>
     BatchRenderer<T>::~BatchRenderer() noexcept {
@@ -27,7 +54,7 @@ namespace renderer {
     }
 
     template<typename T>
-    void BatchRenderer<T>::init() {
+    void BatchRenderer<T>::init(const std::initializer_list<VertexAttribute>& attrs) {
         glGenVertexArrays(1, &vao);
         glBindVertexArray(vao);
 
@@ -51,14 +78,14 @@ namespace renderer {
 
     template<typename T>
     void BatchRenderer<T>::render() {
-        if (sz == 0) {
+        if (n == 0) {
             return;
         }
         if (!initialized) {
-            init();
+            return;
         }
         glBindBuffer(GL_ARRAY_BUFFER, vbo);
-        glBufferSubData(GL_ARRAY_BUFFER, 0, sz * sizeof(T), (void*)data);
+        glBufferSubData(GL_ARRAY_BUFFER, 0, n * sizeof(T), (void*)data);
 
         shader->use();
         shader->uploadMat4(U_VIEW, camera->getViewMatrix());
@@ -73,25 +100,35 @@ namespace renderer {
          * first - Specifies the starting index in the enabled arrays.
          * count -  Specifies the number of indices to be rendered.
          */
-        glDrawArrays(GL_TRIANGLES, 0, sz);
+        glDrawArrays(mode, 0, n);
         glBindVertexArray(0);
-        sz = 0;
+        n = 0;
         shader->detach();
     }
 
     template<typename T>
     bool BatchRenderer<T>::add(const T& t) {
-        if (sz < MAX_BATCH_SIZE) {
-            data[sz++] = t;
-            return true;
-        } else {
+        if (n >= MAX_BATCH_SIZE) {
             return false;
         }
+        const int32_t texId    = getTexId(t);
+        const int32_t texIndex = getTexIndex(textures, texId);
+
+        if (texId != NO_TEX_ID) {
+            data[n++] = t;
+            return true;
+        } else if (texIndex != NO_TEX_ID) {
+            textures[texIndex] = texId;
+            data[n++] = t;
+            return true;
+        }
+
+        return false;
     }
 
     template<typename T>
     std::size_t BatchRenderer<T>::size() const noexcept {
-        return sz;
+        return n;
     }
 }
 

@@ -17,21 +17,29 @@ namespace renderer {
             VertexAttribute{1, GL_INT,   sizeof(Vertex2), (void*)offsetof(Vertex2, texId)}
     };
 
-    MyRenderer::MyRenderer(Camera* camera)
+    template<typename T>
+    static BatchRenderer<T> getBatch(int32_t zIndex, uint32_t texId, bool blendable) {
+        return NULL;
+    }
+
+    MyRenderer::MyRenderer(std::shared_ptr<Camera> camera)
     : camera(camera) {}
 
     void MyRenderer::drawVertex2(const Vertex2& vertex) {
+        bool added = false;
         for (auto& batch : vertex2Batches) {
             if (batch.add(vertex)) {
-                return;
+                added = true;
+                break;
             }
         }
-
-        BatchRenderer<Vertex2> batch{VAO_GL_VERTEX2, camera, NULL};
-        batch.init();
-        batch.add(vertex);
-        vertex2Batches.push_back(batch);
-        batches.push_back(&batch);
+        if (!added) {
+            BatchRenderer<Vertex2> batch{camera, NULL};
+            batch.init(VAO_GL_VERTEX2);
+            batch.add(vertex);
+            vertex2Batches.push_back(batch);
+            batches.push_back(&batch);
+        }
     }
 
     void MyRenderer::drawTriangle2(const std::array<Vertex2, 3>& vertices) {
@@ -54,8 +62,8 @@ namespace renderer {
                 }
             }
             if (!added) {
-                BatchRenderer<gl_Line2> batch{VAO_GL_LINE2, camera, NULL};
-                batch.init();
+                BatchRenderer<gl_Line2> batch{camera, NULL, GL_LINES};
+                batch.init(VAO_GL_LINE2);
                 batch.add(gl_line);
                 line2Batches.push_back(batch);
                 batches.push_back(&batch);

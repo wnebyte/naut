@@ -1,7 +1,6 @@
 #ifndef NAUT_PRIMITIVES_H
 #define NAUT_PRIMITIVES_H
 
-#include <initializer_list>
 #include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
 #include <glm/vec4.hpp>
@@ -19,7 +18,7 @@ namespace renderer {
         glm::vec2 start;
         glm::vec2 end;
         glm::vec4 color;
-        int64_t zIndex;
+        int32_t zIndex;
         float width;
     };
 
@@ -30,7 +29,7 @@ namespace renderer {
 
     struct Line3 {
         glm::vec3 start;
-        glm::vec4 end;
+        glm::vec3 end;
         glm::vec4 color;
         float width;
     };
@@ -40,6 +39,7 @@ namespace renderer {
         glm::vec4 color;
         glm::vec2 uv;
         int32_t texId;
+        int32_t zIndex;
     };
 
     struct Vertex3 {

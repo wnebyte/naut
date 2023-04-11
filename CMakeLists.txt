@@ -32,7 +32,7 @@ add_executable(Naut ${SOURCES}
         src/include/renderer/tesselator.h
         src/include/renderer/tesselator.inl
         src/include/renderer/batchrenderer.h
-        src/include/renderer/batchrenderer.inl src/include/utility/cmath.h src/cpp/utility/cmath.cpp src/cpp/renderer/myrenderer.cpp)
+        src/include/renderer/batchrenderer.inl src/include/utility/cmath.h src/cpp/utility/cmath.cpp src/cpp/renderer/myrenderer.cpp src/include/glm.h)
 
 target_link_libraries(Naut glfw3 stb ${GL_LIBRARY} m)
 

@@ -10,7 +10,7 @@
 namespace renderer {
     class MyRenderer : public Renderer {
     public:
-        MyRenderer(Camera*);
+        MyRenderer(std::shared_ptr<Camera> camera);
 
         ~MyRenderer() noexcept = default;
 
@@ -23,7 +23,7 @@ namespace renderer {
         void drawLine2(const Line2& line);
 
     private:
-        Camera* camera;
+        std::shared_ptr<Camera> camera;
         std::vector<BatchRenderer<gl_Line2>> line2Batches;
         std::vector<BatchRenderer<Vertex2>> vertex2Batches;
         std::vector<Renderer*> batches;
