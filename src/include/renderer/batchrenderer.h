@@ -30,6 +30,8 @@ namespace renderer {
 
         std::size_t size() const noexcept;
 
+        const T& operator[](std::size_t) const;
+
     private:
         uint32_t vao;
         uint32_t vbo;
@@ -37,6 +39,7 @@ namespace renderer {
         T* data;
         std::size_t n;
         std::array<int32_t, N_TEXTURES> textures;
+        std::size_t nTextures;
         bool initialized;
         std::shared_ptr<Camera> camera;
         std::shared_ptr<Shader> shader;

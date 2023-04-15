@@ -6,8 +6,9 @@
 #include "shaderfwd.h"
 
 #define U_PROJECTION "uProjection"
-#define U_VIEW "uView"
-#define Z_INDEX "zIndex"
+#define U_VIEW       "uView"
+#define Z_INDEX      "zIndex"
+#define U_TEXTURES   "uTextures"
 
 namespace renderer {
     class Shader {
@@ -22,7 +23,7 @@ namespace renderer {
 
         void detach() const;
 
-        uint getId() const noexcept;
+        uint32_t getId() const noexcept;
 
         std::string getVertexPath() const noexcept;
 
@@ -32,11 +33,11 @@ namespace renderer {
 
         std::string getFragmentSrc() const noexcept;
 
-        void uploadInt(const std::string& varName, int i) const;
+        void uploadInt(const std::string& varName, int32_t i) const;
 
         void uploadFloat(const std::string& varName, float f) const;
 
-        void uploadIntArray(const std::string& varName, const int array[]) const;
+        void uploadIntArray(const std::string& varName, const int32_t array[]) const;
 
         void uploadFloatArray(const std::string& varName, const float array[]) const;
 
@@ -50,10 +51,10 @@ namespace renderer {
 
         void uploadMat4(const std::string& varName, const glm::mat4& mat) const;
 
-        void uploadTexture(const std::string& varName, int slot) const;
+        void uploadTexture(const std::string& varName, int32_t slot) const;
 
     private:
-        uint id;
+        uint32_t id;
         std::string vertexPath;
         std::string fragmentPath;
         std::string vertexSrc;

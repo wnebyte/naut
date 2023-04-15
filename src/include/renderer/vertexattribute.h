@@ -1,13 +1,14 @@
 #ifndef NAUT_VERTEXATTRIBUTE_H
 #define NAUT_VERTEXATTRIBUTE_H
 
+#include "vertexattributefwd.h"
 #include "defs.h"
 
 namespace renderer {
     struct VertexAttribute {
-        int size;
-        uint type;
-        int stride;
+        int32_t size;
+        uint32_t type;
+        int32_t stride;
         void* offset;
     };
 }
