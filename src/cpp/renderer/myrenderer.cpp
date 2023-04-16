@@ -8,8 +8,8 @@ namespace renderer {
     MyRenderer::MyRenderer(std::shared_ptr<Camera> camera)
     : camera(camera) {}
 
-    void MyRenderer::drawVertex2(const Vertex2& vertex) {
-        for (auto& batch : vertex2Batches) {
+    void MyRenderer::drawVertex2(Vertex2& vertex) {
+        for (auto& batch : v2_batches) {
             if (batch.add(vertex)) {
                 return;
             }
@@ -22,11 +22,11 @@ namespace renderer {
             VertexAttribute{1, GL_INT,   sizeof(Vertex2), (void*)offsetof(Vertex2, texId)}
         });
         batch.add(vertex);
-        vertex2Batches.push_back(batch);
-        batches.push_back(&batch);
+        v2_batches.push_back(batch);
+        batches.push_back(&v2_batches.back());
     }
 
-    void MyRenderer::drawTriangle2(const std::array<Vertex2, 3>& vertices) {
+    void MyRenderer::drawTriangle2(std::array<Vertex2, 3>& vertices) {
         for (auto& vertex : vertices) {
             drawVertex2(vertex);
         }
@@ -39,7 +39,7 @@ namespace renderer {
         for (i = 0; i < 2; ++i) {
             gl_Line2 gl_line = lines[i];
             bool added = false;
-            for (auto& batch : line2Batches) {
+            for (auto& batch : l2_batches) {
                 if (batch.add(gl_line)) {
                     added = true;
                     break;
@@ -52,7 +52,7 @@ namespace renderer {
                     VertexAttribute{4, GL_FLOAT, sizeof(gl_Line2), (void*)offsetof(gl_Line2, color)}
                 });
                 batch.add(gl_line);
-                line2Batches.push_back(batch);
+                l2_batches.push_back(batch);
                 batches.push_back(&batch);
             }
         }

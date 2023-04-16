@@ -4,17 +4,13 @@
 #include "core/keylistener.h"
 #include "core/camera.h"
 #include "core/perspectivecamera.h"
-#include "renderer/boxrenderer.h"
 #include "renderer/shader.h"
-#include "utility/colors.h"
 #include "renderer/batchrenderer.h"
-#include "renderer/box.h"
+#include "utility/colors.h"
 
 namespace core {
 
     using namespace renderer;
-
-    static const Box box{glm::vec3{0.0f, 0.0f, -5.0f}, WHITE_RGBA};
 
     static const std::string vertexPath{"assets/shaders/vertex/vertex2D.glsl"};
 
@@ -32,15 +28,11 @@ namespace core {
 
     static PerspectiveCamera perspective{position, zNear, zFar, 1980.0f / 1080.0f};
 
-    static BatchRenderer<Box> renderer{};
-
     Scene::Scene(Window* window)
     : camera(&perspective),
-    //camera(new PerspectiveCamera{position, zNear, zFar, aspect}),
       shader(new Shader{vertexPath, fragmentPath}),
       window(window) {
         shader->compile();
-        renderer.init();
     }
 
     Scene::~Scene() noexcept {
@@ -53,13 +45,8 @@ namespace core {
     void Scene::update(float dt) {
         debounce -= dt;
         camera->update(dt);
-        renderer.add(box);
-        renderer.render(*camera, *shader);
 
         if (debounce <= 0) {
-//            std::cout << "yaw: " << perspective.getYaw() << "\n";
-//            std::cout << "pitch: " << perspective.getPitch() << '\n';
-//            std::cout << "zoom: " << perspective.getZoom() << "\n----------------------------\n";
             debounce = debounceTime;
         }
     }

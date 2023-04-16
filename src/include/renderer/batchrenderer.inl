@@ -2,7 +2,6 @@
 #define NAUT_BATCHRENDERER_INL
 
 #include <algorithm>
-#include <glad/glad.h>
 #include "batchrenderer.h"
 #include "core/camera.h"
 #include "shader.h"
@@ -14,42 +13,48 @@
 
 namespace renderer {
 
-    static int texIds[N_TEXTURES] =
+    typedef int32_t tex_t;
+
+    static constexpr int texIds[N_TEXTURES] =
             { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 };
 
     template<typename T>
-    static constexpr auto getTexId(T* obj) -> decltype( obj->texId, std::true_type{} ) {
+    static constexpr auto get_t(T* obj) -> decltype( obj->texId, std::true_type{} ) {
         return obj->texId;
     }
 
-    static constexpr auto getTexId(...) -> int32_t {
+    static constexpr auto get_t(...) -> tex_t {
         return NO_TEX_ID;
     }
 
-    static bool addTexId(std::array<int32_t, N_TEXTURES>& textures, std::size_t* n, int32_t texId) {
-        const int32_t *ptr = std::find(textures.begin(), textures.end(), texId);
-
-        if (ptr == textures.end()) {
-            // texture has not yet been added
-            if (*n < N_TEXTURES) {
-                // there is texture room
-                textures[*n] = texId;
+    static int32_t add_t(std::array<tex_t, N_TEXTURES>& textures, std::size_t* n, tex_t texture) {
+        int32_t i = 0;
+        for (std::array<tex_t, N_TEXTURES>::const_iterator it = textures.begin(); it != textures.end(); ++it, ++i) {
+            if (*it == texture) {
+                return i;
+            } else if (*it == NO_TEX_ID) {
+                textures[i] = texture;
                 *n = *n + 1;
-                return true;
-            } else {
-                // there is no texture room
-                return false;
+                return i;
             }
-        } else {
-            // texture has already been added
-            return true;
         }
+
+        return -1;
+    }
+
+    template<typename T>
+    static void setTexId(T* obj, int32_t index) {
+        obj->texId = index;
+    }
+
+    static void setTexId(...) {
+        // do nothing
     }
 
     template<typename T>
     BatchRenderer<T>::BatchRenderer(std::shared_ptr<Camera> camera, std::shared_ptr<Shader> shader, uint32_t mode)
-    : vao(0), vbo(0), mode(mode), n(0), initialized(false), textures(), nTextures(0), camera(camera), shader(shader),
-      data(new T[MAX_BATCH_SIZE]) {
+    : vao(0), vbo(0), mode(mode), initialized(false), textures(), nTextures(0), camera(camera), shader(shader),
+      data(new T[MAX_BATCH_SIZE]), n(0) {
           textures.fill(NO_TEX_ID);
       }
 
@@ -108,14 +113,6 @@ namespace renderer {
         shader->uploadIntArray(U_TEXTURES, texIds);
 
         glBindVertexArray(vao);
-        /*
-         * mode - Specifies what kind of primitives to render.
-         * Symbolic constants GL_POINTS, GL_LINE_STRIP, GL_LINE_LOOP, GL_LINES, GL_LINE_STRIP_ADJACENCY,
-         * GL_LINES_ADJACENCY, GL_TRIANGLE_STRIP, GL_TRIANGLE_FAN, GL_TRIANGLES, GL_TRIANGLE_STRIP_ADJACENCY,
-         * GL_TRIANGLES_ADJACENCY and GL_PATCHES are accepted.
-         * first - Specifies the starting index in the enabled arrays.
-         * count -  Specifies the number of indices to be rendered.
-         */
         glDrawArrays(mode, 0, n);
         glBindVertexArray(0);
         n = 0;
@@ -124,18 +121,25 @@ namespace renderer {
     }
 
     template<typename T>
-    bool BatchRenderer<T>::add(const T& t) {
+    bool BatchRenderer<T>::add(T& t) {
         if (n >= MAX_BATCH_SIZE) {
             return false;
         }
-        const int32_t texId = getTexId(t);
+        const tex_t texture = get_t(t);
 
-        if (addTexId(textures, &nTextures, texId)) {
-            data[n++] = t;
-            return true;
-        } else {
-            return false;
+        if (texture != NO_TEX_ID) {
+            // T has texId data member
+            int32_t index = add_t(textures, &nTextures, texture);
+            if (index == -1) {
+                return false;
+            } else {
+                // texId has been added
+                setTexId(t, index);
+            }
         }
+
+        data[n++] = t;
+        return true;
     }
 
     template<typename T>

@@ -1,6 +1,7 @@
 #ifndef NAUT_BATCHRENDERER_H
 #define NAUT_BATCHRENDERER_H
 
+#include <glad/glad.h>
 #include <memory>
 #include <initializer_list>
 #include "core/camerafwd.h"
@@ -26,7 +27,7 @@ namespace renderer {
 
         void render() override;
 
-        bool add(const T&);
+        bool add(T&);
 
         std::size_t size() const noexcept;
 
