@@ -3,11 +3,13 @@
 
 #include <glad/glad.h>
 #include <memory>
+#include <functional>
 #include <initializer_list>
 #include "core/camerafwd.h"
+#include "batchrendererfwd.h"
 #include "shaderfwd.h"
+#include "vertexattributefwd.h"
 #include "renderer.h"
-#include "vertexattribute.h"
 #include "defs.h"
 
 #define N_TEXTURES (16u)
@@ -45,6 +47,7 @@ namespace renderer {
         std::shared_ptr<Camera> camera;
         std::shared_ptr<Shader> shader;
     };
+
 }
 
 #include "batchrenderer.inl"

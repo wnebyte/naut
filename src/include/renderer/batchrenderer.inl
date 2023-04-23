@@ -15,19 +15,19 @@ namespace renderer {
 
     typedef int32_t tex_t;
 
-    static constexpr int texIds[N_TEXTURES] =
+    static constexpr int32_t INDICES[N_TEXTURES] =
             { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 };
 
     template<typename T>
-    static constexpr auto get_t(T* obj) -> decltype( obj->texId, std::true_type{} ) {
+    static constexpr auto get_tex(T* obj) -> decltype( obj->texId, std::true_type{} ) {
         return obj->texId;
     }
 
-    static constexpr auto get_t(...) -> tex_t {
+    static constexpr auto get_tex(...) -> tex_t {
         return NO_TEX_ID;
     }
 
-    static int32_t add_t(std::array<tex_t, N_TEXTURES>& textures, std::size_t* n, tex_t texture) {
+    static int32_t add_tex(std::array<tex_t, N_TEXTURES>& textures, std::size_t* n, tex_t texture) {
         int32_t i = 0;
         for (std::array<tex_t, N_TEXTURES>::const_iterator it = textures.begin(); it != textures.end(); ++it, ++i) {
             if (*it == texture) {
@@ -110,13 +110,13 @@ namespace renderer {
             glBindTexture(GL_TEXTURE_2D, texId);
             ++i;
         }
-        shader->uploadIntArray(U_TEXTURES, texIds);
+        shader->uploadIntArray(U_TEXTURES, INDICES);
 
         glBindVertexArray(vao);
         glDrawArrays(mode, 0, n);
         glBindVertexArray(0);
-        n = 0;
         glBindTexture(GL_TEXTURE_2D, 0);
+        n = 0;
         shader->detach();
     }
 
@@ -125,11 +125,11 @@ namespace renderer {
         if (n >= MAX_BATCH_SIZE) {
             return false;
         }
-        const tex_t texture = get_t(t);
+        const tex_t texture = get_tex(t);
 
         if (texture != NO_TEX_ID) {
             // T has texId data member
-            int32_t index = add_t(textures, &nTextures, texture);
+            int32_t index = add_tex(textures, &nTextures, texture);
             if (index == -1) {
                 return false;
             } else {

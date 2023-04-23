@@ -8,8 +8,7 @@ namespace renderer {
 
     static const GLsizei sz = 1024;
 
-    static void checkCompileErrors(GLuint shader, const std::string& type)
-    {
+    static void checkCompileErrors(GLuint shader, const std::string& type) {
         GLint success;
         GLchar infoLog[sz];
         glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
@@ -21,8 +20,7 @@ namespace renderer {
         }
     }
 
-    static void checkLinkErrors(GLuint shader)
-    {
+    static void checkLinkErrors(GLuint shader) {
         GLint success;
         GLchar infoLog[sz];
         glGetProgramiv(shader, GL_LINK_STATUS, &success);
@@ -34,8 +32,7 @@ namespace renderer {
         }
     }
 
-    static std::string readifstream(const std::string& path)
-    {
+    static std::string readifstream(const std::string& path) {
         std::string src;
         std::ifstream ifs;
         ifs.exceptions(std::ifstream::failbit | std::ifstream::badbit);
@@ -46,7 +43,7 @@ namespace renderer {
             ss << ifs.rdbuf();
             ifs.close();
             src = ss.str();
-        } catch (std::ifstream::failure& e) {
+        } catch (std::ifstream::failure &e) {
             std::cerr << "Error: (Shader) Could not open file for '" << path << "'\nwhat: " << e.what() << std::endl;
             throw e;
         }
@@ -54,18 +51,16 @@ namespace renderer {
         return src;
     }
 
-    Shader::Shader(const std::string& vertexPath, const std::string& fragmentPath)
-        : id(0), vertexPath(vertexPath), fragmentPath(fragmentPath),
-         vertexSrc(readifstream(vertexPath)), fragmentSrc(readifstream(fragmentPath)),
-         detached(true)
-    {}
+    Shader::Shader(const std::string &vertexPath, const std::string &fragmentPath)
+            : id(0), vertexPath(vertexPath), fragmentPath(fragmentPath),
+              vertexSrc(readifstream(vertexPath)), fragmentSrc(readifstream(fragmentPath)),
+              detached(true) {}
 
-    void Shader::compile()
-    {
-        uint vertexID;
-        uint fragmentID;
-        const char* cVertexSrc = vertexSrc.c_str();
-        const char* cFragmentSrc = fragmentSrc.c_str();
+    void Shader::compile() {
+        uint32_t vertexID;
+        uint32_t fragmentID;
+        const char *cVertexSrc = vertexSrc.c_str();
+        const char *cFragmentSrc = fragmentSrc.c_str();
 
         // Load and compile the vertex shader
         vertexID = glCreateShader(GL_VERTEX_SHADER);
@@ -91,110 +86,93 @@ namespace renderer {
         glDeleteShader(fragmentID);
     }
 
-    void Shader::use() const
-    {
+    void Shader::use() const {
         if (detached) {
             glUseProgram(id);
             detached = false;
         }
     }
 
-    void Shader::detach() const
-    {
+    void Shader::detach() const {
         glUseProgram(0);
         detached = true;
     }
 
-    uint Shader::getId() const noexcept
-    {
+    uint32_t Shader::getId() const noexcept {
         return id;
     }
 
-    std::string Shader::getVertexPath() const noexcept
-    {
+    std::string Shader::getVertexPath() const noexcept {
         return vertexPath;
     }
 
-    std::string Shader::getFragmentPath() const noexcept
-    {
+    std::string Shader::getFragmentPath() const noexcept {
         return fragmentPath;
     }
 
-    std::string Shader::getVertexSrc() const noexcept
-    {
+    std::string Shader::getVertexSrc() const noexcept {
         return vertexSrc;
     }
 
-    std::string Shader::getFragmentSrc() const noexcept
-    {
+    std::string Shader::getFragmentSrc() const noexcept {
         return fragmentSrc;
     }
 
-    void Shader::uploadInt(const std::string& varName, int i) const
-    {
+    void Shader::uploadInt(const std::string &varName, int i) const {
         use();
         int varLocation = glGetUniformLocation(id, varName.c_str());
         glUniform1i(varLocation, i);
     }
 
-    void Shader::uploadFloat(const std::string &varName, float f) const
-    {
+    void Shader::uploadFloat(const std::string &varName, float f) const {
         use();
         int varLocation = glGetUniformLocation(id, varName.c_str());
         glUniform1f(varLocation, f);
     }
 
-    void Shader::uploadIntArray(const std::string& varName, const int* array) const
-    {
+    void Shader::uploadIntArray(const std::string &varName, const int *array) const {
         use();
         int varLocation = glGetUniformLocation(id, varName.c_str());
         glUniform1iv(varLocation, 1, array);
     }
 
-    void Shader::uploadFloatArray(const std::string& varName, const float* array) const
-    {
+    void Shader::uploadFloatArray(const std::string &varName, const float *array) const {
         use();
         int varLocation = glGetUniformLocation(id, varName.c_str());
         glUniform1fv(varLocation, 1, array);
     }
 
-    void Shader::uploadVec2(const std::string& varName, const glm::vec2& vec) const
-    {
+    void Shader::uploadVec2(const std::string &varName, const glm::vec2 &vec) const {
         use();
         int varLocation = glGetUniformLocation(id, varName.c_str());
         glUniform2fv(varLocation, 1, &vec[0]);
     }
 
-    void Shader::uploadVec3(const std::string& varName, const glm::vec3& vec) const
-    {
+    void Shader::uploadVec3(const std::string &varName, const glm::vec3 &vec) const {
         use();
         int varLocation = glGetUniformLocation(id, varName.c_str());
         glUniform3fv(varLocation, 1, &vec[0]);
     }
 
-    void Shader::uploadVec4(const std::string& varName, const glm::vec4& vec) const
-    {
+    void Shader::uploadVec4(const std::string &varName, const glm::vec4 &vec) const {
         use();
         int varLocation = glGetUniformLocation(id, varName.c_str());
         glUniform4fv(varLocation, 1, &vec[0]);
     }
 
-    void Shader::uploadMat3(const std::string& varName, const glm::mat3& mat) const
-    {
+    void Shader::uploadMat3(const std::string &varName, const glm::mat3 &mat) const {
         use();
         int varLocation = glGetUniformLocation(id, varName.c_str());
         glUniformMatrix3fv(varLocation, 1, GL_FALSE, &mat[0][0]);
     }
 
-    void Shader::uploadMat4(const std::string& varName, const glm::mat4& mat) const
-    {
+    void Shader::uploadMat4(const std::string &varName, const glm::mat4 &mat) const {
         use();
         int varLocation = glGetUniformLocation(id, varName.c_str());
         glUniformMatrix4fv(varLocation, 1, GL_FALSE, &mat[0][0]);
     }
 
-    void Shader::uploadTexture(const std::string& varName, int slot) const
-    {
+    void Shader::uploadTexture(const std::string &varName, int slot) const {
         use();
         int varLocation = glGetUniformLocation(id, varName.c_str());
         glUniform1i(varLocation, slot);

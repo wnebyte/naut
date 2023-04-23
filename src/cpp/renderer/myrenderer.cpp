@@ -8,7 +8,7 @@ namespace renderer {
     MyRenderer::MyRenderer(std::shared_ptr<Camera> camera)
     : camera(camera) {}
 
-    void MyRenderer::drawVertex2(Vertex2& vertex) {
+    void MyRenderer::drawVertex2(Vertex2 vertex) {
         for (auto& batch : v2_batches) {
             if (batch.add(vertex)) {
                 return;
@@ -37,10 +37,10 @@ namespace renderer {
         uint32_t i;
 
         for (i = 0; i < 2; ++i) {
-            gl_Line2 gl_line = lines[i];
+            gl_Line2 *gl_line = &lines[i];
             bool added = false;
             for (auto& batch : l2_batches) {
-                if (batch.add(gl_line)) {
+                if (batch.add(*gl_line)) {
                     added = true;
                     break;
                 }
@@ -51,9 +51,9 @@ namespace renderer {
                     VertexAttribute{2, GL_FLOAT, sizeof(gl_Line2), (void*)0},
                     VertexAttribute{4, GL_FLOAT, sizeof(gl_Line2), (void*)offsetof(gl_Line2, color)}
                 });
-                batch.add(gl_line);
+                batch.add(*gl_line);
                 l2_batches.push_back(batch);
-                batches.push_back(&batch);
+                batches.push_back(&l2_batches.back());
             }
         }
     }

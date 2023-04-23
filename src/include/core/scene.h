@@ -1,14 +1,12 @@
 #ifndef NAUT_SCENE_H
 #define NAUT_SCENE_H
 
+#include <memory>
 #include "windowfwd.h"
 #include "scenefwd.h"
 #include "camerafwd.h"
-#include "renderer/shaderfwd.h"
 
 namespace core {
-
-    using namespace renderer;
 
     class Scene {
     public:
@@ -28,12 +26,13 @@ namespace core {
 
         void processInput(float);
 
-        Camera* getCamera() const noexcept;
+        Window* getWindow() const noexcept;
+
+        std::shared_ptr<Camera> getCamera() const noexcept;
 
     private:
         Window* window;
-        Camera* camera;
-        Shader* shader;
+        std::shared_ptr<Camera> camera;
     };
 }
 

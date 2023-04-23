@@ -18,7 +18,7 @@ namespace renderer {
 
         void drawTriangle2(std::array<Vertex2, 3>& vertices);
 
-        void drawVertex2(Vertex2&);
+        void drawVertex2(Vertex2);
 
         void drawLine2(const Line2& line);
 

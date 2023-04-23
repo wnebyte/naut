@@ -10,11 +10,11 @@ namespace core {
     public:
         static void endFrame();
 
-        static void keyCallback(GLFWwindow*, int key, int scanCode, int action, int mods);
+        static void keyCallback(GLFWwindow*, int keyCode, int scanCode, int action, int mods);
 
         static bool isKeyPressed(int keyCode);
 
-        static bool isKeyBeginPressed(int keyCode);
+        static bool isKeyJustPressed(int keyCode);
     };
 }
 

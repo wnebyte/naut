@@ -1,20 +1,10 @@
-#include <iostream>
-#include "core/scene.h"
 #include "core/window.h"
-#include "core/keylistener.h"
+#include "core/scene.h"
 #include "core/camera.h"
+#include "core/keylistener.h"
 #include "core/perspectivecamera.h"
-#include "renderer/shader.h"
-#include "renderer/batchrenderer.h"
-#include "utility/colors.h"
 
 namespace core {
-
-    using namespace renderer;
-
-    static const std::string vertexPath{"assets/shaders/vertex/vertex2D.glsl"};
-
-    static const std::string fragmentPath{"assets/shaders/fragment/vertex2D.glsl"};
 
     static const glm::vec4 position{0.0f};
 
@@ -29,16 +19,11 @@ namespace core {
     static PerspectiveCamera perspective{position, zNear, zFar, 1980.0f / 1080.0f};
 
     Scene::Scene(Window* window)
-    : camera(&perspective),
-      shader(new Shader{vertexPath, fragmentPath}),
-      window(window) {
-        shader->compile();
-    }
+            : window(window), camera(&perspective) {}
 
     Scene::~Scene() noexcept {
         try {
-            delete camera;
-            delete shader;
+            // do nothing
         } catch ( ... ) {}
     }
 
@@ -52,7 +37,7 @@ namespace core {
     }
 
     void Scene::processInput(float dt) {
-        if (KeyListener::isKeyBeginPressed(GLFW_KEY_ESCAPE)) {
+        if (KeyListener::isKeyJustPressed(GLFW_KEY_ESCAPE)) {
             window->setShouldClose(true);
             return;
         }
@@ -76,7 +61,11 @@ namespace core {
         }
     }
 
-    Camera* Scene::getCamera() const noexcept {
+    Window* Scene::getWindow() const noexcept {
+        return window;
+    }
+
+    std::shared_ptr<Camera> Scene::getCamera() const noexcept {
         return camera;
     }
 }

@@ -53,14 +53,16 @@ namespace core {
 
         float getAspectRatio() const noexcept;
 
-        const Scene& getScene() const noexcept;
+        void setScene(const std::shared_ptr<Scene>&);
+
+        std::shared_ptr<Scene> getScene() const noexcept;
 
     private:
         GLFWwindow* glfwWindow;
         std::string title;
         int width;
         int height;
-        Scene* scene;
+        std::shared_ptr<Scene> scene;
 
         explicit Window(const std::string&, int, int);
 

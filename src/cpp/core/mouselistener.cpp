@@ -2,6 +2,8 @@
 #include "core/mouselistener.h"
 #include "core/camera.h"
 
+#define N_BUTTONS (9u)
+
 namespace core {
 
     static float xPos = 0.0f;
@@ -12,9 +14,9 @@ namespace core {
 
     static double yScroll = 0.0;
 
-    static std::array<bool, 9> mouseButtonPressed{};
+    static std::array<bool, N_BUTTONS> mouseButtonPressed{};
 
-    static std::array<bool, 9> mouseButtonBeginPressed{};
+    static std::array<bool, N_BUTTONS> mouseButtonJustPressed{};
 
     static bool dragging = false;
 
@@ -22,14 +24,14 @@ namespace core {
 
     static bool firstMouse = true;
 
-    static std::function<Camera* const()> callback{};
+    static std::function<std::shared_ptr<Camera>()> fnGetCamera{};
 
-    void MouseListener::init(std::function<Camera *const()> c) {
-        callback = c;
+    void MouseListener::init(std::function<std::shared_ptr<Camera>()> fn) {
+        fnGetCamera = fn;
     }
 
     void MouseListener::endFrame() {
-        std::fill(mouseButtonBeginPressed.begin(), mouseButtonBeginPressed.end(), false);
+        std::fill(mouseButtonJustPressed.begin(), mouseButtonJustPressed.end(), false);
     }
 
     void MouseListener::cursorPosCallback(GLFWwindow*, double x, double y) {
@@ -45,8 +47,8 @@ namespace core {
         xPos = x;
         yPos = y;
 
-        Camera* const camera = callback();
-        if (camera != nullptr) {
+        std::shared_ptr<Camera> camera = fnGetCamera();
+        if (camera) {
             camera->handleMouseMovement(xOffset, yOffset, true);
         }
     }
@@ -54,15 +56,15 @@ namespace core {
     void MouseListener::mouseButtonCallback(GLFWwindow*, int button, int action, int mod) {
         if (action == GLFW_PRESS) {
             ++mouseButtonDown;
-            if (button < mouseButtonPressed.size()) {
+            if (button < N_BUTTONS) {
                 mouseButtonPressed[button] = true;
-                mouseButtonBeginPressed[button] = true;
+                mouseButtonJustPressed[button] = true;
             }
         } else if (action == GLFW_RELEASE) {
             --mouseButtonDown;
-            if (button < mouseButtonPressed.size()) {
+            if (button < N_BUTTONS) {
                 mouseButtonPressed[button] = false;
-                mouseButtonBeginPressed[button] = false;
+                mouseButtonJustPressed[button] = false;
                 dragging = false;
             }
         }
@@ -72,14 +74,14 @@ namespace core {
         xScroll = xOffset;
         yScroll = yOffset;
 
-        Camera* const camera = callback();
-        if (camera != nullptr) {
+        std::shared_ptr<Camera> camera = fnGetCamera();
+        if (camera) {
             camera->handleMouseScroll(yOffset);
         }
     }
 
     bool MouseListener::isMouseButtonDown(int button) {
-        if (button < mouseButtonPressed.size()) {
+        if (button < N_BUTTONS) {
             return mouseButtonPressed[button];
         } else {
             return false;
@@ -87,8 +89,8 @@ namespace core {
     }
 
     bool MouseListener::isMouseButtonBeginDown(int button) {
-        if (button < mouseButtonBeginPressed.size()) {
-            return mouseButtonBeginPressed[button];
+        if (button < N_BUTTONS) {
+            return mouseButtonJustPressed[button];
         } else {
             return false;
         }

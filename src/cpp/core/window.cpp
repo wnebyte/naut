@@ -2,12 +2,12 @@
 #include <glm/vec2.hpp>
 #include "core/window.h"
 #include "core/scene.h"
-#include "core/mouselistener.h"
-#include "core/keylistener.h"
 #include "core/camera.h"
+#include "core/keylistener.h"
+#include "core/mouselistener.h"
 #include "renderer/shader.h"
 
-#define DEFAULT_WIDTH 1920
+#define DEFAULT_WIDTH  1920
 #define DEFAULT_HEIGHT 1080
 
 namespace core {
@@ -59,12 +59,11 @@ namespace core {
     Window::Window(const std::string& title, int width, int height)
             : glfwWindow(nullptr), scene(nullptr), title(title), width(width), height(height) {
         init();
-        scene = new Scene{this};
+        scene = std::shared_ptr<Scene>{new Scene{this}};
     }
 
     Window::~Window() noexcept {
         try {
-            delete scene;
             glfwSetErrorCallback(NULL);
             glfwDestroyWindow(glfwWindow);
             glfwTerminate();
@@ -87,7 +86,7 @@ namespace core {
             height = res.y;
         }
 
-        MouseListener::init([this](){ return (scene != nullptr) ? scene->getCamera() : nullptr; });
+        MouseListener::init([this](){ return scene ? scene->getCamera() : nullptr; });
 
         // Configure GLFW
         glfwDefaultWindowHints();
@@ -131,7 +130,7 @@ namespace core {
     }
 
     void Window::update(float dt) {
-        if (scene != nullptr) {
+        if (scene) {
             scene->update(dt);
         }
     }
@@ -142,7 +141,7 @@ namespace core {
 
     void Window::pollEvents(float dt) {
         glfwPollEvents();
-        if (scene != nullptr) {
+        if (scene) {
             scene->processInput(dt);
         }
     }
@@ -170,9 +169,8 @@ namespace core {
     }
 
     void Window::setTitle(const std::string& newTitle) {
-        const char* str = newTitle.c_str();
         title = newTitle;
-        glfwSetWindowTitle(glfwWindow, str);
+        glfwSetWindowTitle(glfwWindow, title.c_str());
     }
 
     std::string Window::getTitle() const noexcept {
@@ -193,7 +191,11 @@ namespace core {
         return w / h;
     }
 
-    const Scene& Window::getScene() const noexcept {
-        return *scene;
+    void Window::setScene(const std::shared_ptr<Scene>& newScene) {
+        scene = newScene;
+    }
+
+    std::shared_ptr<Scene> Window::getScene() const noexcept {
+        return scene;
     }
 }

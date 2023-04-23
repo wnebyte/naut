@@ -2,6 +2,7 @@
 #define NAUT_MOUSELISTENER_H
 
 #include <array>
+#include <memory>
 #include <functional>
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
@@ -11,7 +12,7 @@
 namespace core {
     class MouseListener {
     public:
-        static void init(std::function<Camera* const()>);
+        static void init(std::function<std::shared_ptr<Camera>()>);
 
         static void endFrame();
 
