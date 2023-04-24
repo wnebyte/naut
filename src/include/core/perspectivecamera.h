@@ -35,7 +35,7 @@ namespace core {
 
         void handleMouseMovement(float xOffset, float yOffset, bool constrainPitch) override;
 
-        void handleKeyboard(Movement movement, float dt) override;
+        void handleKeyboard(Direction movement, float dt) override;
 
         float getZNear() const noexcept;
 

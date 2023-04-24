@@ -35,7 +35,8 @@ add_executable(Naut ${SOURCES}
         src/include/utility/cmath.h
         src/cpp/utility/cmath.cpp
         src/cpp/renderer/myrenderer.cpp
-        src/include/glm.h)
+        src/include/glm.h
+        src/include/renderer/rendererfwd.h)
 
 target_link_libraries(Naut glfw3 stb ${GL_LIBRARY} m)
 

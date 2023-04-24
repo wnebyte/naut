@@ -1,8 +1,8 @@
 #ifndef NAUT_MYRENDERER_H
 #define NAUT_MYRENDERER_H
 
-#include <vector>
 #include <array>
+#include <vector>
 #include "renderer.h"
 #include "batchrenderer.h"
 #include "primitives.h"
@@ -10,7 +10,7 @@
 namespace renderer {
     class MyRenderer : public Renderer {
     public:
-        MyRenderer(std::shared_ptr<Camera> camera);
+        MyRenderer(const std::shared_ptr<Camera>& camera);
 
         ~MyRenderer() noexcept = default;
 

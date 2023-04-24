@@ -42,22 +42,22 @@ namespace core {
             return;
         }
         if (KeyListener::isKeyPressed(GLFW_KEY_W)) {
-            camera->handleKeyboard(Camera::Movement::Forward, dt);
+            camera->handleKeyboard(Camera::Direction::Forward, dt);
         }
         if (KeyListener::isKeyPressed(GLFW_KEY_S)) {
-            camera->handleKeyboard(Camera::Movement::Backward, dt);
+            camera->handleKeyboard(Camera::Direction::Backward, dt);
         }
         if (KeyListener::isKeyPressed(GLFW_KEY_A)) {
-            camera->handleKeyboard(Camera::Movement::Left, dt);
+            camera->handleKeyboard(Camera::Direction::Left, dt);
         }
         if (KeyListener::isKeyPressed(GLFW_KEY_D)) {
-            camera->handleKeyboard(Camera::Movement::Right, dt);
+            camera->handleKeyboard(Camera::Direction::Right, dt);
         }
         if (KeyListener::isKeyPressed(GLFW_KEY_SPACE)) {
-            camera->handleKeyboard(Camera::Movement::Up, dt);
+            camera->handleKeyboard(Camera::Direction::Up, dt);
         }
         if (KeyListener::isKeyPressed(GLFW_KEY_LEFT_CONTROL)) {
-            camera->handleKeyboard(Camera::Movement::Down, dt);
+            camera->handleKeyboard(Camera::Direction::Down, dt);
         }
     }
 

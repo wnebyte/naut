@@ -2,7 +2,6 @@
 #define NAUT_VERTEXATTRIBUTE_H
 
 #include "vertexattributefwd.h"
-#include "defs.h"
 
 namespace renderer {
     struct VertexAttribute {

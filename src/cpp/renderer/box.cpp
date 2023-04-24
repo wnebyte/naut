@@ -29,10 +29,10 @@ namespace renderer {
 
     static glm::vec3* getDistinctPositions(const glm::vec3& position, const glm::vec3& scale)
     {
-        static const uint sz = 8;
+        static const uint32_t sz = 8;
         glm::vec3* vertices = new glm::vec3[sz];
 
-        for (uint i = 0; i < sz; ++i) {
+        for (uint32_t i = 0; i < sz; ++i) {
             glm::vec3 v = VEC3S[i];
             glm::vec3 pos{position.x + (v.x * scale.x),
                           position.y + (v.y * scale.y),
@@ -46,7 +46,7 @@ namespace renderer {
     static std::array<glm::vec3, 8> getDistinctVertices(const glm::vec3& position,
                                                         const glm::vec3& scale) {
         std::array<glm::vec3, 8> vertices;
-        for (uint i = 0; i < 8; ++i) {
+        for (uint32_t i = 0; i < 8; ++i) {
             glm::vec3 v = VEC3S[i];
             glm::vec3 pos{position.x + (v.x * scale.x),
                           position.y + (v.y * scale.y),
@@ -74,7 +74,7 @@ namespace renderer {
         uint32_t offset = position_t * SIZE;
 
         for (uint32_t i = 0; i < 36; ++i) {
-            uint index = INDICES[i];
+            uint32_t index = INDICES[i];
             data[offset++] = Type{vertices[index], box.color};
         }
     }

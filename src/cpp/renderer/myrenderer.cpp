@@ -5,7 +5,7 @@ namespace renderer {
 
     using utility::CMath;
 
-    MyRenderer::MyRenderer(std::shared_ptr<Camera> camera)
+    MyRenderer::MyRenderer(const std::shared_ptr<Camera>& camera)
     : camera(camera) {}
 
     void MyRenderer::drawVertex2(Vertex2 vertex) {

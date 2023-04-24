@@ -27,7 +27,7 @@ namespace core {
     void Camera::handleMouseMovement(float xOffset, float yOffset, bool constrainPitch)
     {}
 
-    void Camera::handleKeyboard(Movement direction, float dt)
+    void Camera::handleKeyboard(Direction direction, float dt)
     {}
 
     glm::vec3 Camera::getPosition() const noexcept

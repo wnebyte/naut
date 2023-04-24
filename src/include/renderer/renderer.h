@@ -1,10 +1,7 @@
 #ifndef NAUT_RENDERER_H
 #define NAUT_RENDERER_H
 
-#include "core/camerafwd.h"
-#include "shaderfwd.h"
-
-using Camera = core::Camera;
+#include "rendererfwd.h"
 
 namespace renderer {
     class Renderer {

@@ -1,16 +1,15 @@
 #ifndef NAUT_BATCHRENDERER_H
 #define NAUT_BATCHRENDERER_H
 
-#include <glad/glad.h>
 #include <memory>
 #include <functional>
 #include <initializer_list>
+#include <glad/glad.h>
 #include "core/camerafwd.h"
 #include "batchrendererfwd.h"
 #include "shaderfwd.h"
 #include "vertexattributefwd.h"
 #include "renderer.h"
-#include "defs.h"
 
 #define N_TEXTURES (16u)
 
@@ -21,7 +20,7 @@ namespace renderer {
     template<typename T>
     class BatchRenderer : public Renderer {
     public:
-        BatchRenderer(std::shared_ptr<Camera>, std::shared_ptr<Shader> shader, uint32_t mode = GL_TRIANGLES);
+        BatchRenderer(const std::shared_ptr<Camera>& camera, const std::shared_ptr<Shader>& shader, uint32_t mode = GL_TRIANGLES);
 
         ~BatchRenderer() noexcept;
 

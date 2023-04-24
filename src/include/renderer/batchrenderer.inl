@@ -52,7 +52,7 @@ namespace renderer {
     }
 
     template<typename T>
-    BatchRenderer<T>::BatchRenderer(std::shared_ptr<Camera> camera, std::shared_ptr<Shader> shader, uint32_t mode)
+    BatchRenderer<T>::BatchRenderer(const std::shared_ptr<Camera>& camera, const std::shared_ptr<Shader>& shader, uint32_t mode)
     : vao(0), vbo(0), mode(mode), initialized(false), textures(), nTextures(0), camera(camera), shader(shader),
       data(new T[MAX_BATCH_SIZE]), n(0) {
           textures.fill(NO_TEX_ID);

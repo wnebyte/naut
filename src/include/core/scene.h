@@ -2,8 +2,8 @@
 #define NAUT_SCENE_H
 
 #include <memory>
-#include "windowfwd.h"
 #include "scenefwd.h"
+#include "windowfwd.h"
 #include "camerafwd.h"
 
 namespace core {

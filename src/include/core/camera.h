@@ -8,7 +8,7 @@
 namespace core {
     class Camera {
     public:
-        enum class Movement {
+        enum class Direction {
             Forward,
             Backward,
             Left,
@@ -27,7 +27,7 @@ namespace core {
 
         virtual void handleMouseMovement(float xOffset, float yOffset, bool constrainPitch);
 
-        virtual void handleKeyboard(Movement direction, float dt);
+        virtual void handleKeyboard(Direction direction, float dt);
 
         glm::vec3 getPosition() const noexcept;
 

@@ -66,26 +66,26 @@ namespace core {
         pitch   += 0.1f * yOffset;
     }
 
-    void PerspectiveCamera::handleKeyboard(Movement direction, float dt)
+    void PerspectiveCamera::handleKeyboard(Direction direction, float dt)
     {
         float velocity = movementSpeed * dt;
         switch (direction) {
-            case Camera::Movement::Forward:
+            case Camera::Direction::Forward:
                 position += (forward * velocity);
                 break;
-            case Movement::Backward:
+            case Direction::Backward:
                 position -= (forward * velocity);
                 break;
-            case Movement::Left:
+            case Direction::Left:
                 position -= (right * velocity);
                 break;
-            case Movement::Right:
+            case Direction::Right:
                 position += (right * velocity);
                 break;
-            case Movement::Up:
+            case Direction::Up:
                 position += (up * velocity);
                 break;
-            case Movement::Down:
+            case Direction::Down:
                 position -= (up * velocity);
                 break;
         }
