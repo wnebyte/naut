@@ -32,8 +32,8 @@ add_executable(Naut ${SOURCES}
         src/include/renderer/batchrendererfwd.h
         src/include/renderer/batchrenderer.h
         src/include/renderer/batchrenderer.inl
-        src/include/utility/cmath.h
-        src/cpp/utility/cmath.cpp
+        src/include/utility/math.h
+        src/cpp/utility/math.cpp
         src/cpp/renderer/myrenderer.cpp
         src/include/glm.h
         src/include/renderer/rendererfwd.h)

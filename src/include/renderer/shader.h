@@ -33,6 +33,8 @@ namespace renderer {
 
         std::string getFragmentSrc() const noexcept;
 
+        operator uint32_t() const noexcept;
+
         void uploadInt(const std::string& varName, int32_t i) const;
 
         void uploadFloat(const std::string& varName, float f) const;

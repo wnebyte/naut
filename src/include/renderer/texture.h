@@ -10,10 +10,10 @@ namespace renderer {
     class Texture {
     public:
         struct Parameter {
-            int name;
-            int value;
+            int32_t name;
+            int32_t value;
 
-            Parameter(int name, int value) noexcept;
+            Parameter(int32_t name, int32_t value) noexcept;
 
             ~Parameter() noexcept = default;
 
@@ -27,26 +27,26 @@ namespace renderer {
         };
 
         Texture(const std::string& path,
-                uint target,
+                uint32_t target,
                 const std::initializer_list<Parameter>& params = {});
 
-        Texture(uint target,
-                int internalFormat,
-                int width,
-                int height,
-                uint format,
-                uint type,
+        Texture(uint32_t target,
+                int32_t internalFormat,
+                int32_t width,
+                int32_t height,
+                uint32_t format,
+                uint32_t type,
                 const std::initializer_list<Parameter>& params = {});
 
-        virtual ~Texture() noexcept = default;
+        ~Texture() noexcept = default;
 
-        void resize(int, int);
+        void resize(int32_t, int32_t);
 
         void bind() const;
 
         void unbind() const;
 
-        uint getId() const noexcept;
+        uint32_t getId() const noexcept;
 
         std::string getPath() const noexcept;
 
@@ -56,17 +56,17 @@ namespace renderer {
 
         int getHeight() const noexcept;
 
-        operator uint() const noexcept;
+        operator uint32_t() const noexcept;
 
     private:
-        uint id;
+        uint32_t id;
         std::string path;
-        uint target;
-        int internalFormat;
-        int width;
-        int height;
-        uint format;
-        uint type;
+        uint32_t target;
+        int32_t internalFormat;
+        int32_t width;
+        int32_t height;
+        uint32_t format;
+        uint32_t type;
         std::vector<Parameter> params;
     };
 }

@@ -1,12 +1,12 @@
 #include "renderer/myrenderer.h"
-#include "utility/cmath.h"
+#include "utility/math.h"
 
 namespace renderer {
 
-    using utility::CMath;
+    using namespace utility::math;
 
     MyRenderer::MyRenderer(const std::shared_ptr<Camera>& camera)
-    : camera(camera) {}
+            : camera(camera) {}
 
     void MyRenderer::drawVertex2(Vertex2 vertex) {
         for (auto& batch : v2_batches) {
@@ -33,10 +33,11 @@ namespace renderer {
     }
 
     void MyRenderer::drawLine2(const Line2& line) {
-        gl_Line2 lines[] = { {line.start, line.color}, {line.end, line.color} };
+        static constexpr std::size_t N_LINES = 2;
+        gl_Line2 lines[N_LINES] = { {line.start, line.color}, {line.end, line.color} };
         uint32_t i;
 
-        for (i = 0; i < 2; ++i) {
+        for (i = 0; i < N_LINES; ++i) {
             gl_Line2 *gl_line = &lines[i];
             bool added = false;
             for (auto& batch : l2_batches) {

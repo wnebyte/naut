@@ -5,7 +5,6 @@
 #include <glm/vec3.hpp>
 #include <glm/vec4.hpp>
 #include "primitivesfwd.h"
-#include "vertexattribute.h"
 
 namespace renderer {
 
