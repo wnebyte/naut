@@ -14,9 +14,12 @@ namespace core {
         OrthoCamera(const glm::vec3& position,
                     int32_t projectionWidth,
                     int32_t projectionHeight,
+                    float zNear,
+                    float zFar,
+                    float aspectRatio,
                     const glm::vec3& viewEye = DEFAULT_VIEW_EYE,
                     const glm::vec3& viewCenter = DEFAULT_VIEW_CENTER,
-                    const glm::vec3& viewUp = DEFAULT_VIEW_UP);
+                    const glm::vec3& viewUp = DEFAULT_VIEW_UP) noexcept;
 
         ~OrthoCamera() noexcept = default;
 
@@ -40,7 +43,7 @@ namespace core {
 
         void setViewUp(const glm::vec3& newViewUp) noexcept;
 
-    protected:
+    private:
         int32_t projectionWidth;
         int32_t projectionHeight;
         glm::vec3 viewEye;

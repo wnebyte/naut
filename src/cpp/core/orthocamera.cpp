@@ -7,17 +7,20 @@ namespace core {
     OrthoCamera::OrthoCamera(const glm::vec3& position,
                              int32_t projectionWidth,
                              int32_t projectionHeight,
+                             float zNear,
+                             float zFar,
+                             float aspectRatio,
                              const glm::vec3& viewEye,
                              const glm::vec3& viewCenter,
-                             const glm::vec3& viewUp)
-    : Camera(position),
+                             const glm::vec3& viewUp) noexcept
+    : Camera(position, zNear, zFar, aspectRatio),
       projectionWidth(projectionWidth), projectionHeight(projectionHeight),
       viewEye(viewEye), viewCenter(viewCenter), viewUp(viewUp) {}
 
     void OrthoCamera::adjustProjection() {
         float halfWidth  = static_cast<float>(projectionWidth)  / 2.0f;
         float halfHeight = static_cast<float>(projectionHeight) / 2.0f;
-        projectionMatrix = glm::ortho(-halfWidth, halfWidth, -halfHeight, halfHeight);
+        projectionMatrix = glm::ortho(-halfWidth, halfWidth * zoom, -halfHeight, halfHeight * zoom, zNear, zFar);
         inverseProjectionMatrix = glm::inverse(projectionMatrix);
     }
 

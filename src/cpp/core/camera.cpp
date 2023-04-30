@@ -3,8 +3,9 @@
 
 namespace core {
 
-    Camera::Camera(const glm::vec3& position)
+    Camera::Camera(const glm::vec3& position, float zNear, float zFar, float aspectRatio) noexcept
             : position(position),
+              zNear(zNear), zFar(zFar), aspectRatio(aspectRatio), zoom(1.0f),
               projectionMatrix(), viewMatrix(),
               inverseProjectionMatrix(), inverseViewMatrix() {}
 
@@ -35,6 +36,38 @@ namespace core {
 
     void Camera::setPosition(const glm::vec3& newPosition) noexcept {
         position = newPosition;
+    }
+
+    float Camera::getZNear() const noexcept {
+        return zNear;
+    }
+
+    void Camera::setZNear(float newZNear) noexcept {
+        zNear = newZNear;
+    }
+
+    float Camera::getZFar() const noexcept {
+        return zFar;
+    }
+
+    void Camera::setZFar(float newZFar) noexcept {
+        zFar = newZFar;
+    }
+
+    float Camera::getAspectRatio() const noexcept {
+        return aspectRatio;
+    }
+
+    void Camera::setAspectRatio(float newAspectRatio) noexcept {
+        aspectRatio = newAspectRatio;
+    }
+
+    float Camera::getZoom() const noexcept {
+        return zoom;
+    }
+
+    void Camera::setZoom(float newZoom) noexcept {
+        zoom = newZoom;
     }
 
     glm::mat4 Camera::getProjectionMatrix() const noexcept {

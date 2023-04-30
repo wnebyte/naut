@@ -1,20 +1,24 @@
 #include <glm/ext/matrix_clip_space.hpp>
 #include <glm/ext/matrix_transform.hpp>
 #include "core/perspectivecamera.h"
-#include "core/window.h"
 
 namespace core {
 
     PerspectiveCamera::PerspectiveCamera(const glm::vec3& position,
-                                         float zNear, float zFar, float aspect,
-                                         const glm::vec3& forward, const glm::vec3& up, const glm::vec3& right,
-                                         float yaw, float pitch, float zoom,
-                                         float movementSpeed, float mouseSensitivity)
-                                         : Camera(position),
-                                           zNear(zNear), zFar(zFar), aspect(aspect),
+                                         float zNear,
+                                         float zFar,
+                                         float aspectRatio,
+                                         const glm::vec3& forward,
+                                         const glm::vec3& up,
+                                         const glm::vec3& right,
+                                         float yaw,
+                                         float pitch,
+                                         float movementSpeed,
+                                         float mouseSensitivity) noexcept
+                                         : Camera(position, zNear, zFar, aspectRatio),
                                            forward(forward), up(up), wUp(up), right(right),
-                                           yaw(yaw), pitch(pitch), zoom(zoom),
-                                           movementSpeed(movementSpeed), mouseSensitivity(mouseSensitivity) {
+                                           yaw(yaw), pitch(pitch),
+                                           movementSpeed(movementSpeed), mouseSensitivity(mouseSensitivity)  {
                                              updateCameraVectors();
                                          }
 
@@ -24,7 +28,7 @@ namespace core {
     }
 
     void PerspectiveCamera::adjustProjection() {
-        projectionMatrix = glm::perspective(glm::radians(zoom), Window::getInstance()->getAspectRatio(), zNear, zFar);
+        projectionMatrix = glm::perspective(glm::radians(zoom), aspectRatio, zNear, zFar);
         inverseProjectionMatrix = glm::inverse(projectionMatrix);
     }
 
@@ -82,30 +86,6 @@ namespace core {
         }
     }
 
-    float PerspectiveCamera::getZNear() const noexcept {
-        return zNear;
-    }
-
-    void PerspectiveCamera::setZNear(float newZNear) noexcept {
-        zNear = newZNear;
-    }
-
-    float PerspectiveCamera::getZFar() const noexcept {
-        return zFar;
-    }
-
-    void PerspectiveCamera::setZFar(float newZFar) noexcept {
-        zFar = newZFar;
-    }
-
-    float PerspectiveCamera::getAspect() const noexcept {
-        return aspect;
-    }
-
-    void PerspectiveCamera::setAspect(float newAspect) noexcept {
-        aspect = newAspect;
-    }
-
     float PerspectiveCamera::getYaw() const noexcept {
         return yaw;
     }
@@ -120,14 +100,6 @@ namespace core {
 
     void PerspectiveCamera::setPitch(float newPitch) noexcept {
         pitch = newPitch;
-    }
-
-    float PerspectiveCamera::getZoom() const noexcept {
-        return zoom;
-    }
-
-    void PerspectiveCamera::setZoom(float newZoom) noexcept {
-        zoom = newZoom;
     }
 
     float PerspectiveCamera::getMovementSpeed() const noexcept {

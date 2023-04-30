@@ -4,28 +4,26 @@
 #include "perspectivecamerafwd.h"
 #include "camera.h"
 
-#define DEFAULT_FORWARD glm::vec3{0.0f, 0.0f, -1.0f}
-#define DEFAULT_UP glm::vec3{0.0f, 1.0f, 0.0f}
-#define DEFAULT_RIGHT glm::vec3{1.0f, 0.0f, 0.0f}
-#define DEFAULT_YAW -90.0f
-#define DEFAULT_PITCH 0.0f
-#define DEFAULT_ZOOM 0.0f
-#define DEFAULT_MOVEMENT_SPEED 2.5f
-#define DEFAULT_MOUSE_SENSITIVITY 0.08f
+#define DEFAULT_FORWARD           (glm::vec3{0.0f, 0.0f, -1.0f})
+#define DEFAULT_UP                (glm::vec3{0.0f, 1.0f, 0.0f})
+#define DEFAULT_RIGHT             (glm::vec3{1.0f, 0.0f, 0.0f})
+#define DEFAULT_YAW               (-90.0f)
+#define DEFAULT_PITCH             (0.0f)
+#define DEFAULT_MOVEMENT_SPEED    (2.5f)
+#define DEFAULT_MOUSE_SENSITIVITY (0.08f)
 
 namespace core {
     class PerspectiveCamera : public Camera {
     public:
         PerspectiveCamera(const glm::vec3& position,
-                          float zNear, float zFar, float aspect,
+                          float zNear, float zFar, float aspectRatio,
                           const glm::vec3& forward = DEFAULT_FORWARD,
                           const glm::vec3& up = DEFAULT_UP,
                           const glm::vec3& right = DEFAULT_RIGHT,
                           float yaw = DEFAULT_YAW,
                           float pitch = DEFAULT_PITCH,
-                          float zoom = DEFAULT_ZOOM,
                           float movementSpeed = DEFAULT_MOVEMENT_SPEED,
-                          float mouseSensitivity = DEFAULT_MOUSE_SENSITIVITY);
+                          float mouseSensitivity = DEFAULT_MOUSE_SENSITIVITY) noexcept;
 
         ~PerspectiveCamera() noexcept = default;
 
@@ -37,49 +35,29 @@ namespace core {
 
         void handleKeyboard(Direction movement, float dt) override;
 
-        float getZNear() const noexcept;
-
-        void setZNear(float newZNear) noexcept;
-
-        float getZFar() const noexcept;
-
-        void setZFar(float newZFar) noexcept;
-
-        float getAspect() const noexcept;
-
-        void setAspect(float newAspect) noexcept;
-
         float getYaw() const noexcept;
 
-        void setYaw(float newYaw) noexcept;
+        void setYaw(float) noexcept;
 
         float getPitch() const noexcept;
 
-        void setPitch(float newPitch) noexcept;
-
-        float getZoom() const noexcept;
-
-        void setZoom(float newZoom) noexcept;
+        void setPitch(float) noexcept;
 
         float getMovementSpeed() const noexcept;
 
-        void setMovementSpeed(float newMovementSpeed) noexcept;
+        void setMovementSpeed(float) noexcept;
 
         float getMouseSensitivity() const noexcept;
 
-        void setMouseSensitivity(float newMouseSensitivity) noexcept;
+        void setMouseSensitivity(float) noexcept;
 
-    protected:
+    private:
         glm::vec3 forward;
         glm::vec3 up;
         glm::vec3 wUp;
         glm::vec3 right;
-        float zNear;
-        float zFar;
-        float aspect;
         float yaw;
         float pitch;
-        float zoom;
         float movementSpeed;
         float mouseSensitivity;
 
