@@ -15,28 +15,23 @@ set(INCLUDE_DIRECTORY src/include)
 
 file(GLOB SOURCES CONFIGURE_DEPENDS
         "src/include/*.h"
+        "src/include/*.inl"
         "src/include/core/*.h"
+        "src/include/core/*.inl"
+        "src/include/io/*.h"
+        "src/include/io/*.inl"
         "src/include/render/*.h"
         "src/include/render/*.inl"
         "src/include/utility/*.h"
+        "src/include/utility/*.inl"
         "src/c/*.c"
         "src/cpp/*.cpp"
         "src/cpp/core/*.cpp"
-        "src/cpp/renderer/*.cpp")
+        "src/cpp/io/*.cpp"
+        "src/cpp/renderer/*.cpp"
+        "src/cpp/utility/*.cpp")
 
-add_executable(Naut ${SOURCES}
-        src/include/utility/assets.h
-        src/cpp/utility/assets.cpp
-        src/cpp/renderer/primitives.cpp
-        src/include/renderer/myrenderer.h
-        src/include/renderer/batchrendererfwd.h
-        src/include/renderer/batchrenderer.h
-        src/include/renderer/batchrenderer.inl
-        src/include/utility/math.h
-        src/cpp/utility/math.cpp
-        src/cpp/renderer/myrenderer.cpp
-        src/include/glm.h
-        src/include/renderer/rendererfwd.h)
+add_executable(Naut ${SOURCES})
 
 target_link_libraries(Naut glfw3 stb ${GL_LIBRARY} m)
 

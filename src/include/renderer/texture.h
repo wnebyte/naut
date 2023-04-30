@@ -50,11 +50,11 @@ namespace renderer {
 
         std::string getPath() const noexcept;
 
-        uint getTarget() const noexcept;
+        uint32_t getTarget() const noexcept;
 
-        int getWidth() const noexcept;
+        int32_t getWidth() const noexcept;
 
-        int getHeight() const noexcept;
+        int32_t getHeight() const noexcept;
 
         operator uint32_t() const noexcept;
 

@@ -5,10 +5,10 @@
 #include <glm/ext/matrix_float4x4.hpp>
 #include "shaderfwd.h"
 
-#define U_PROJECTION "uProjection"
-#define U_VIEW       "uView"
-#define Z_INDEX      "zIndex"
-#define U_TEXTURES   "uTextures"
+#define U_PROJECTION ("uProjection")
+#define U_VIEW       ("uView")
+#define Z_INDEX      ("zIndex")
+#define U_TEXTURES   ("uTextures")
 
 namespace renderer {
     class Shader {

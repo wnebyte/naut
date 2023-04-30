@@ -1,12 +1,10 @@
 #include <cstdlib>
 #include "core/window.h"
-#include "core/mouselistener.h"
-#include "core/keylistener.h"
-#include "renderer/batchrenderer.h"
-#include "renderer/primitives.h"
+#include "io/mouselistener.h"
+#include "io/keylistener.h"
 
+using namespace io;
 using namespace core;
-using namespace renderer;
 
 int main(int argc, char *argv[]) {
     Window* window = Window::newInstance("Naut");
@@ -25,9 +23,10 @@ int main(int argc, char *argv[]) {
         window->update(dt);
         window->swapBuffers();
 
-        MouseListener::endFrame();
-        KeyListener::endFrame();
+        mouselistener::endFrame();
+        keylistener::endFrame();
     }
 
+    delete window;
     return EXIT_SUCCESS;
 }

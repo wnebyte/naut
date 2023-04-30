@@ -1,10 +1,12 @@
-#include "core/window.h"
 #include "core/scene.h"
+#include "core/window.h"
 #include "core/camera.h"
-#include "core/keylistener.h"
 #include "core/perspectivecamera.h"
+#include "io/keylistener.h"
 
 namespace core {
+
+    using namespace io::keylistener;
 
     static const glm::vec4 position{0.0f};
 
@@ -37,26 +39,26 @@ namespace core {
     }
 
     void Scene::processInput(float dt) {
-        if (KeyListener::isKeyJustPressed(GLFW_KEY_ESCAPE)) {
+        if (isKeyJustPressed(GLFW_KEY_ESCAPE)) {
             window->setShouldClose(true);
             return;
         }
-        if (KeyListener::isKeyPressed(GLFW_KEY_W)) {
+        if (isKeyPressed(GLFW_KEY_W)) {
             camera->handleKeyboard(Camera::Direction::Forward, dt);
         }
-        if (KeyListener::isKeyPressed(GLFW_KEY_S)) {
+        if (isKeyPressed(GLFW_KEY_S)) {
             camera->handleKeyboard(Camera::Direction::Backward, dt);
         }
-        if (KeyListener::isKeyPressed(GLFW_KEY_A)) {
+        if (isKeyPressed(GLFW_KEY_A)) {
             camera->handleKeyboard(Camera::Direction::Left, dt);
         }
-        if (KeyListener::isKeyPressed(GLFW_KEY_D)) {
+        if (isKeyPressed(GLFW_KEY_D)) {
             camera->handleKeyboard(Camera::Direction::Right, dt);
         }
-        if (KeyListener::isKeyPressed(GLFW_KEY_SPACE)) {
+        if (isKeyPressed(GLFW_KEY_SPACE)) {
             camera->handleKeyboard(Camera::Direction::Up, dt);
         }
-        if (KeyListener::isKeyPressed(GLFW_KEY_LEFT_CONTROL)) {
+        if (isKeyPressed(GLFW_KEY_LEFT_CONTROL)) {
             camera->handleKeyboard(Camera::Direction::Down, dt);
         }
     }

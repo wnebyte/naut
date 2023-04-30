@@ -3,16 +3,15 @@
 #include "core/window.h"
 #include "core/scene.h"
 #include "core/camera.h"
-#include "core/keylistener.h"
-#include "core/mouselistener.h"
-#include "renderer/shader.h"
+#include "io/keylistener.h"
+#include "io/mouselistener.h"
 
-#define DEFAULT_WIDTH  1920
-#define DEFAULT_HEIGHT 1080
+#define DEFAULT_WIDTH  (1920)
+#define DEFAULT_HEIGHT (1080)
 
 namespace core {
 
-    using namespace renderer;
+    using namespace io;
 
     static Window* window = nullptr;
 
@@ -53,7 +52,9 @@ namespace core {
     }
 
     static void framebufferSizeCallback(GLFWwindow*, int w, int h) {
-        window->setSize(w, h);
+        if (window) {
+            window->setSize(w, h);
+        }
     }
 
     Window::Window(const std::string& title, int width, int height)
@@ -86,7 +87,7 @@ namespace core {
             height = res.y;
         }
 
-        MouseListener::init([this](){ return scene ? scene->getCamera() : nullptr; });
+        mouselistener::init([this](){ return scene ? scene->getCamera() : nullptr; });
 
         // Configure GLFW
         glfwDefaultWindowHints();
@@ -114,10 +115,10 @@ namespace core {
 
         // Set callbacks
         glfwSetFramebufferSizeCallback(glfwWindow, framebufferSizeCallback);
-        glfwSetCursorPosCallback(glfwWindow, MouseListener::cursorPosCallback);
-        glfwSetMouseButtonCallback(glfwWindow, MouseListener::mouseButtonCallback);
-        glfwSetScrollCallback(glfwWindow, MouseListener::scrollCallback);
-        glfwSetKeyCallback(glfwWindow, KeyListener::keyCallback);
+        glfwSetCursorPosCallback(glfwWindow, mouselistener::cursorPosCallback);
+        glfwSetMouseButtonCallback(glfwWindow, mouselistener::mouseButtonCallback);
+        glfwSetScrollCallback(glfwWindow, mouselistener::scrollCallback);
+        glfwSetKeyCallback(glfwWindow, keylistener::keyCallback);
         glfwSetInputMode(glfwWindow, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
         // Enable v-sync
