@@ -31,6 +31,9 @@ namespace core {
 
     void Scene::update(float dt) {
         debounce -= dt;
+        float aspectRatio = window->getAspectRatio();
+
+        camera->setAspectRatio(aspectRatio);
         camera->update(dt);
 
         if (debounce <= 0) {

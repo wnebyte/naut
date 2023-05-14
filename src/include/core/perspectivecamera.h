@@ -30,7 +30,7 @@ namespace core {
 
         void handleMouseMovement(float xOffset, float yOffset, bool constrainPitch) override;
 
-        void handleKeyboard(Direction movement, float dt) override;
+        void handleKeyboard(Direction direction, float dt) override;
 
         float getYaw() const noexcept;
 

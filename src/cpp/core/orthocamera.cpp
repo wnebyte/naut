@@ -32,14 +32,14 @@ namespace core {
     }
 
     void OrthoCamera::setProjectionWidth(int32_t newProjectionWidth) noexcept {
-        projectionHeight = newProjectionWidth;
+        projectionWidth = newProjectionWidth;
     }
 
     int32_t OrthoCamera::getProjectionHeight() const noexcept {
         return projectionHeight;
     }
 
-    void OrthoCamera::setProjectionHeight(int32_t newProjectionWidth) noexcept {
-        projectionWidth = newProjectionWidth;
+    void OrthoCamera::setProjectionHeight(int32_t newProjectionHeight) noexcept {
+        projectionHeight = newProjectionHeight;
     }
 }

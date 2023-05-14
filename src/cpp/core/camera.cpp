@@ -1,6 +1,8 @@
 #include <glm/ext/matrix_transform.hpp>
 #include "core/camera.h"
 
+#define DEFAULT_ZOOM (1.0f)
+
 namespace core {
 
     Camera::Camera(const glm::vec3& position,
@@ -9,7 +11,7 @@ namespace core {
                    const glm::vec3& up,
                    const glm::vec3& right) noexcept
             : position(position),
-              zNear(zNear), zFar(zFar), aspectRatio(aspectRatio), zoom(1.0f),
+              zNear(zNear), zFar(zFar), aspectRatio(aspectRatio), zoom(DEFAULT_ZOOM),
               forward(forward), up(up), right(right),
               projectionMatrix(), viewMatrix(), inverseProjectionMatrix(), inverseViewMatrix() {}
 
