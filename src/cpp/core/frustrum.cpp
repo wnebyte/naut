@@ -4,34 +4,13 @@
 #define N_POINTS (8u)
 
 namespace core {
-    namespace {
-        enum Plane {
-            Left = 0,
-            Right,
-            Bottom,
-            Top,
-            Near,
-            Far,
-            Count,
-            Combinations = Count * (Count - 1) / 2
-        };
 
-        static glm::vec4 planes[Count];
-
-        static glm::vec3 points[N_POINTS];
-
-        template<Plane i, Plane j>
-        struct ij2k {
-            enum { k = i * (9 - i) / 2 + j - 1 };
-        };
-
-        template<Plane a, Plane b, Plane c>
-        glm::vec3 intersection(const glm::vec3 *crosses) {
-            float dot = glm::dot(glm::vec3{planes[a]}, crosses[ij2k<b, c>::k]);
-            glm::vec3 result = glm::mat3(crosses[ij2k<b, c>::k], -crosses[ij2k<a, c>::k], crosses[ij2k<a, b>::k]) *
-                               glm::vec3(planes[a].w, planes[b].w, planes[c].w);
-            return result * (-1.0f / dot);
-        }
+    template<Plane a, Plane b, Plane c>
+    glm::vec3 Frustrum::intersection(const glm::vec3 *crosses) {
+        float dot = glm::dot(glm::vec3{planes[a]}, crosses[ij2k<b, c>::k]);
+        glm::vec3 result = glm::mat3(crosses[ij2k<b, c>::k], -crosses[ij2k<a, c>::k], crosses[ij2k<a, b>::k]) *
+                           glm::vec3(planes[a].w, planes[b].w, planes[c].w);
+        return result * (-1.0f / dot);
     }
 
     Frustrum::Frustrum(const glm::mat4& mat) noexcept {
