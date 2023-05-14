@@ -20,12 +20,16 @@ namespace core {
             window = new Window{title, width, height};
             return window;
         } else {
-            return nullptr;
+            throw std::exception{};
         }
     }
 
     Window* Window::getInstance() {
-        return window;
+        if (window != nullptr) {
+            return window;
+        } else {
+            throw std::exception{};
+        }
     }
 
     static glm::ivec2 getMaxResolution(GLFWmonitor* monitor) {
@@ -147,8 +151,12 @@ namespace core {
         }
     }
 
+    void Window::setInputMode(int mode, int value) {
+        glfwSetInputMode(glfwWindow, mode, value);
+    }
+
     void Window::setCursorMode(int value) {
-        glfwSetInputMode(glfwWindow, GLFW_CURSOR, value);
+        setInputMode(GLFW_CURSOR, value);
     }
 
     void Window::setCursorPos(double xPos, double yPos) {
@@ -164,7 +172,7 @@ namespace core {
     }
 
     void Window::setSize(int newWidth, int newHeight) {
-        width = newWidth;
+        width  = newWidth;
         height = newHeight;
         glViewport(0, 0, width, height);
     }
@@ -186,7 +194,7 @@ namespace core {
         return height;
     }
 
-    float Window::getAspectRatio() const noexcept {
+    float Window::getAspectRatio() const {
         float w = static_cast<float>(width);
         float h = static_cast<float>(height);
         return w / h;

@@ -37,6 +37,8 @@ namespace core {
 
         void pollEvents(float dt);
 
+        void setInputMode(int mode, int value);
+
         void setCursorMode(int value);
 
         void setCursorPos(double xPos, double yPos);
@@ -51,7 +53,7 @@ namespace core {
 
         int getHeight() const noexcept;
 
-        float getAspectRatio() const noexcept;
+        float getAspectRatio() const;
 
         void setScene(const std::shared_ptr<Scene>&);
 
