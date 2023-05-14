@@ -1,5 +1,4 @@
-#include <glm/ext/matrix_clip_space.hpp>
-#include <glm/ext/matrix_transform.hpp>
+#include "glm.h"
 #include "core/orthocamera.h"
 
 namespace core {
@@ -10,12 +9,11 @@ namespace core {
                              float zNear,
                              float zFar,
                              float aspectRatio,
-                             const glm::vec3& viewEye,
-                             const glm::vec3& viewCenter,
-                             const glm::vec3& viewUp) noexcept
-    : Camera(position, zNear, zFar, aspectRatio),
-      projectionWidth(projectionWidth), projectionHeight(projectionHeight),
-      viewEye(viewEye), viewCenter(viewCenter), viewUp(viewUp) {}
+                             const glm::vec3& forward,
+                             const glm::vec3& up,
+                             const glm::vec3& right) noexcept
+            : Camera(position, zNear, zFar, aspectRatio, forward, up, right),
+              projectionWidth(projectionWidth), projectionHeight(projectionHeight) {}
 
     void OrthoCamera::adjustProjection() {
         float halfWidth  = static_cast<float>(projectionWidth)  / 2.0f;
@@ -25,7 +23,7 @@ namespace core {
     }
 
     void OrthoCamera::adjustView() {
-        viewMatrix = glm::lookAt(viewEye, viewCenter, viewUp);
+        viewMatrix = glm::lookAt(position, position + forward, up);
         inverseViewMatrix = glm::inverse(viewMatrix);
     }
 
@@ -43,29 +41,5 @@ namespace core {
 
     void OrthoCamera::setProjectionHeight(int32_t newProjectionWidth) noexcept {
         projectionWidth = newProjectionWidth;
-    }
-
-    glm::vec3 OrthoCamera::getViewEye() const noexcept {
-        return viewEye;
-    }
-
-    void OrthoCamera::setViewEye(const glm::vec3& newViewEye) noexcept {
-        viewEye = newViewEye;
-    }
-
-    glm::vec3 OrthoCamera::getViewCenter() const noexcept {
-        return viewCenter;
-    }
-
-    void OrthoCamera::setViewCenter(const glm::vec3& newViewCenter) noexcept {
-        viewCenter = newViewCenter;
-    }
-
-    glm::vec3 OrthoCamera::getViewUp() const noexcept {
-        return viewUp;
-    }
-
-    void OrthoCamera::setViewUp(const glm::vec3& newViewUp) noexcept {
-        viewUp = newViewUp;
     }
 }

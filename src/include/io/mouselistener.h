@@ -7,10 +7,10 @@
 #include <GLFW/glfw3.h>
 #include "core/camerafwd.h"
 
-using namespace core;
-
 namespace io {
     namespace mouselistener {
+        using namespace core;
+
         void init(std::function<std::shared_ptr<Camera>()>);
 
         void endFrame();
@@ -21,9 +21,21 @@ namespace io {
 
         void scrollCallback(GLFWwindow*, double xOffset, double yOffset);
 
+        /**
+         * Returns whether the mouse button associated with the specified <code>button</code> is currently down.
+         * @param button the button
+         * @return <code>true</code> if the specified button is down,
+         * otherwise <code>false</code>
+         */
         bool isMouseButtonDown(int button);
 
-        bool isMouseButtonBeginDown(int button);
+        /**
+         * Returns whether the mouse button associated with the specified <code>button</code> was pressed during this frame.
+         * @param button the button
+         * @return <code>true</code> if the specified button was pressed during this frame,
+         * otherwise <code>false</code>
+         */
+        bool isMouseButtonPressed(int button);
 
         bool isDragging();
 

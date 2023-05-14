@@ -7,38 +7,39 @@ namespace io {
 
     namespace keylistener {
 
+        static std::array<bool, N_KEYS> keyDown{};
+
         static std::array<bool, N_KEYS> keyPressed{};
-        static std::array<bool, N_KEYS> keyJustPressed{};
 
         void endFrame() {
-            std::fill(keyJustPressed.begin(), keyJustPressed.end(), false);
+            std::fill(keyPressed.begin(), keyPressed.end(), false);
         }
 
         void keyCallback(GLFWwindow*, int keyCode, int, int action, int) {
             if (action == GLFW_PRESS) {
                 if (keyCode < N_KEYS) {
+                    keyDown[keyCode] = true;
                     keyPressed[keyCode] = true;
-                    keyJustPressed[keyCode] = true;
                 }
             } else if (action == GLFW_RELEASE) {
                 if (keyCode < N_KEYS) {
+                    keyDown[keyCode] = false;
                     keyPressed[keyCode] = false;
-                    keyJustPressed[keyCode] = false;
                 }
+            }
+        }
+
+        bool isKeyDown(int keyCode) {
+            if (keyCode < N_KEYS) {
+                return keyDown[keyCode];
+            } else {
+                return false;
             }
         }
 
         bool isKeyPressed(int keyCode) {
             if (keyCode < N_KEYS) {
                 return keyPressed[keyCode];
-            } else {
-                return false;
-            }
-        }
-
-        bool isKeyJustPressed(int keyCode) {
-            if (keyCode < N_KEYS) {
-                return keyJustPressed[keyCode];
             } else {
                 return false;
             }

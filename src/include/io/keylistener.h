@@ -10,9 +10,21 @@ namespace io {
 
         void keyCallback(GLFWwindow*, int keyCode, int scanCode, int action, int mods);
 
-        bool isKeyPressed(int keyCode);
+        /**
+         * Returns whether the key associated with the specified <code>keyCode</code> is currently down.
+         * @param keyCode the keyCode
+         * @return <code>true</code> if the specified key is down,
+         * otherwise <code>false</code>
+         */
+        bool isKeyDown(int keyCode);
 
-        bool isKeyJustPressed(int keyCode);
+        /**
+         * Returns whether the key associated with the specified <code>keyCode</code> was pressed during this frame.
+         * @param keyCode the keyCode
+         * @return <code>true</code> if the specified key was pressed during this frame,
+         * otherwise <code>false</code>
+         */
+        bool isKeyPressed(int keyCode);
     }
 }
 

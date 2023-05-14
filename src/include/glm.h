@@ -8,5 +8,7 @@
 #include <glm/mat4x4.hpp>
 #include <glm/common.hpp>
 #include <glm/trigonometric.hpp>
+#include <glm/ext/matrix_clip_space.hpp>
+#include <glm/ext/matrix_transform.hpp>
 
 #endif //NAUT_GLM_H

@@ -3,11 +3,15 @@
 
 namespace core {
 
-    Camera::Camera(const glm::vec3& position, float zNear, float zFar, float aspectRatio) noexcept
+    Camera::Camera(const glm::vec3& position,
+                   float zNear, float zFar, float aspectRatio,
+                   const glm::vec3& forward,
+                   const glm::vec3& up,
+                   const glm::vec3& right) noexcept
             : position(position),
               zNear(zNear), zFar(zFar), aspectRatio(aspectRatio), zoom(1.0f),
-              projectionMatrix(), viewMatrix(),
-              inverseProjectionMatrix(), inverseViewMatrix() {}
+              forward(forward), up(up), right(right),
+              projectionMatrix(), viewMatrix(), inverseProjectionMatrix(), inverseViewMatrix() {}
 
     void Camera::update(float dt) {
         adjustProjection();
@@ -23,20 +27,6 @@ namespace core {
     void Camera::handleMouseMovement(float xOffset, float yOffset, bool constrainPitch) {}
 
     void Camera::handleKeyboard(Direction direction, float dt) {}
-
-    glm::vec3 Camera::getPosition() const noexcept {
-        return position;
-    }
-
-    void Camera::setPosition(float x, float y, float z) noexcept {
-        position.x = x;
-        position.y = y;
-        position.z = z;
-    }
-
-    void Camera::setPosition(const glm::vec3& newPosition) noexcept {
-        position = newPosition;
-    }
 
     float Camera::getZNear() const noexcept {
         return zNear;
@@ -68,6 +58,30 @@ namespace core {
 
     void Camera::setZoom(float newZoom) noexcept {
         zoom = newZoom;
+    }
+
+    glm::vec3 Camera::getForward() const noexcept {
+        return forward;
+    }
+
+    void Camera::setForward(const glm::vec3& newForward) noexcept {
+        forward = newForward;
+    }
+
+    glm::vec3 Camera::getUp() const noexcept {
+        return up;
+    }
+
+    void Camera::setUp(const glm::vec3& newUp) noexcept {
+        up = newUp;
+    }
+
+    glm::vec3 Camera::getRight() const noexcept {
+        return right;
+    }
+
+    void Camera::setRight(const glm::vec3& newRight) noexcept {
+        right = newRight;
     }
 
     glm::mat4 Camera::getProjectionMatrix() const noexcept {

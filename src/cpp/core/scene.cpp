@@ -39,26 +39,26 @@ namespace core {
     }
 
     void Scene::processInput(float dt) {
-        if (isKeyJustPressed(GLFW_KEY_ESCAPE)) {
+        if (isKeyPressed(GLFW_KEY_ESCAPE)) {
             window->setShouldClose(true);
             return;
         }
-        if (isKeyPressed(GLFW_KEY_W)) {
+        if (isKeyDown(GLFW_KEY_W)) {
             camera->handleKeyboard(Camera::Direction::Forward, dt);
         }
-        if (isKeyPressed(GLFW_KEY_S)) {
+        if (isKeyDown(GLFW_KEY_S)) {
             camera->handleKeyboard(Camera::Direction::Backward, dt);
         }
-        if (isKeyPressed(GLFW_KEY_A)) {
+        if (isKeyDown(GLFW_KEY_A)) {
             camera->handleKeyboard(Camera::Direction::Left, dt);
         }
-        if (isKeyPressed(GLFW_KEY_D)) {
+        if (isKeyDown(GLFW_KEY_D)) {
             camera->handleKeyboard(Camera::Direction::Right, dt);
         }
-        if (isKeyPressed(GLFW_KEY_SPACE)) {
+        if (isKeyDown(GLFW_KEY_SPACE)) {
             camera->handleKeyboard(Camera::Direction::Up, dt);
         }
-        if (isKeyPressed(GLFW_KEY_LEFT_CONTROL)) {
+        if (isKeyDown(GLFW_KEY_LEFT_CONTROL)) {
             camera->handleKeyboard(Camera::Direction::Down, dt);
         }
     }

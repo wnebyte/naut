@@ -1,8 +1,17 @@
-#include <glm/ext/matrix_clip_space.hpp>
-#include <glm/ext/matrix_transform.hpp>
+#include "glm.h"
 #include "core/perspectivecamera.h"
+#include "utility/math.h"
+
+#define MIN_ZOOM     (1.0f)
+#define MAX_ZOOM     (90.0f)
+#define MIN_PITCH    (-90.0f)
+#define MAX_PITCH    (90.0f)
+#define YAW_WEIGHT   (1.7f)
+#define PITCH_WEIGHT (0.1f)
 
 namespace core {
+
+    using namespace utility;
 
     PerspectiveCamera::PerspectiveCamera(const glm::vec3& position,
                                          float zNear,
@@ -15,9 +24,8 @@ namespace core {
                                          float pitch,
                                          float movementSpeed,
                                          float mouseSensitivity) noexcept
-                                         : Camera(position, zNear, zFar, aspectRatio),
-                                           forward(forward), up(up), wUp(up), right(right),
-                                           yaw(yaw), pitch(pitch),
+                                         : Camera(position, zNear, zFar, aspectRatio, forward, up, right),
+                                           yaw(yaw), pitch(pitch), wUp(up),
                                            movementSpeed(movementSpeed), mouseSensitivity(mouseSensitivity)  {
                                              updateCameraVectors();
                                          }
@@ -50,15 +58,20 @@ namespace core {
     }
 
     void PerspectiveCamera::handleMouseScroll(float yOffset) {
-        zoom -= yOffset;
-        zoom = glm::clamp(zoom, 1.0f, 90.0f);
+        zoom = math::clamp(zoom -= yOffset, MIN_ZOOM, MAX_ZOOM);
     }
 
     void PerspectiveCamera::handleMouseMovement(float xOffset, float yOffset, bool constrainPitch) {
         xOffset *= mouseSensitivity;
         yOffset *= mouseSensitivity;
-        yaw     += 1.7f * xOffset;
-        pitch   += 0.1f * yOffset;
+        yaw     += YAW_WEIGHT   * xOffset;
+        pitch   += PITCH_WEIGHT * yOffset;
+
+        if (constrainPitch) {
+            pitch = math::clamp(pitch, MIN_PITCH, MAX_PITCH);
+        }
+
+        updateCameraVectors();
     }
 
     void PerspectiveCamera::handleKeyboard(Direction direction, float dt) {

@@ -10,55 +10,64 @@ namespace io {
     namespace mouselistener {
 
         static float xPos = 0.0f;
+
         static float yPos = 0.0f;
+
         static double xScroll = 0.0;
+
         static double yScroll = 0.0;
+
+        static std::array<bool, N_BUTTONS> mouseButtonDown{};
+
         static std::array<bool, N_BUTTONS> mouseButtonPressed{};
-        static std::array<bool, N_BUTTONS> mouseButtonJustPressed{};
+
         static bool dragging = false;
-        static int mouseButtonDown = 0;
+
+        static int nMouseButtonDown = 0;
+
         static bool firstMouse = true;
+
         static std::function<std::shared_ptr<Camera>()> fnGetCamera{};
 
-        void init(std::function<std::shared_ptr<Camera>()> fn) {
-            fnGetCamera = fn;
+        void init(std::function<std::shared_ptr<Camera>()> newFnGetCamera) {
+            fnGetCamera = newFnGetCamera;
         }
 
         void endFrame() {
-            std::fill(mouseButtonJustPressed.begin(), mouseButtonJustPressed.end(), false);
+            std::fill(mouseButtonPressed.begin(), mouseButtonPressed.end(), false);
         }
 
         void cursorPosCallback(GLFWwindow*, double x, double y) {
-            dragging = (mouseButtonDown > 0);
             if (firstMouse) {
                 xPos = x;
                 yPos = y;
                 firstMouse = false;
             }
 
+            dragging = (nMouseButtonDown > 0);
             float xOffset = x - xPos;
             float yOffset = yPos - y; // reversed since y-coordinates go from bottom to top
             xPos = x;
             yPos = y;
 
             std::shared_ptr<Camera> camera = fnGetCamera();
-            if (camera) {
+            if (camera && (xOffset > 0.0f || yOffset > 0.0f)) {
                 camera->handleMouseMovement(xOffset, yOffset, true);
             }
         }
 
-        void mouseButtonCallback(GLFWwindow*, int button, int action, int mod) {
+        void mouseButtonCallback(GLFWwindow*, int button, int action, int) {
             if (action == GLFW_PRESS) {
-                ++mouseButtonDown;
+                ++nMouseButtonDown;
                 if (button < N_BUTTONS) {
+                    mouseButtonDown[button] = true;
                     mouseButtonPressed[button] = true;
-                    mouseButtonJustPressed[button] = true;
                 }
             } else if (action == GLFW_RELEASE) {
-                --mouseButtonDown;
+                --nMouseButtonDown;
                 if (button < N_BUTTONS) {
+                    mouseButtonDown[button] = false;
                     mouseButtonPressed[button] = false;
-                    mouseButtonJustPressed[button] = false;
                     dragging = false;
                 }
             }
@@ -69,22 +78,22 @@ namespace io {
             yScroll = yOffset;
 
             std::shared_ptr<Camera> camera = fnGetCamera();
-            if (camera) {
+            if (camera && yOffset > 0.0f) {
                 camera->handleMouseScroll(yOffset);
             }
         }
 
         bool isMouseButtonDown(int button) {
             if (button < N_BUTTONS) {
-                return mouseButtonPressed[button];
+                return mouseButtonDown[button];
             } else {
                 return false;
             }
         }
 
-        bool isMouseButtonBeginDown(int button) {
+        bool isMouseButtonPressed(int button) {
             if (button < N_BUTTONS) {
-                return mouseButtonJustPressed[button];
+                return mouseButtonPressed[button];
             } else {
                 return false;
             }
@@ -109,5 +118,55 @@ namespace io {
         float getScrollY() {
             return yScroll;
         }
+
+//        glm::vec2& getWorldCoords(glm::vec2& dest) {
+//            std::shared_ptr<Camera> camera = fnGetCamera();
+//            float x = xPos - viewportPos.x;
+//            x = (x / viewportSize.x) * 2.0f - 1.0f;
+//            float y = yPos - viewportPos.y;
+//            yPos = -((y / viewportSize.y) * 2.0f - 1.0f);
+//            glm::vec4 tmp{x, y, 0.0f, 1.0f};
+//            tmp = (tmp * (camera->getInverseViewMatrix() * camera->getInverseProjectionMatrix()));
+//            dest.x = tmp.x;
+//            dest.y = tmp.y;
+//            return dest;
+//        }
+//
+//        glm::vec2& getScreenCoords(glm::vec2& dest) {
+//            constexpr int32_t w = 1920, h = 1080;
+//            std::shared_ptr<Camera> camera = fnGetCamera();
+//            float x = xPos - viewportPos.x;
+//            x = (x / viewportSize.x) * w;
+//            float y = yPos - viewportPos.y;
+//            y = h - ((y / viewportSize.y) * h);
+//            dest.x = x;
+//            dest.y = y;
+//            return dest;
+//        }
+//
+//        glm::vec2& screenCoordsToWorldCoords(const glm::ivec2& screenCoords, glm::vec2& dest) {
+//            constexpr int32_t w = 1920, h = 1080;
+//            std::shared_ptr<Camera> camera = fnGetCamera();
+//            glm::vec2 norm{screenCoords.x / w, screenCoords.y / h};
+//            norm = (norm * 2.0f) - 1.0f;
+//            glm::vec4 tmp{norm.x, norm.y, 0.0f, 1.0f};
+//            tmp = (tmp * (camera->getInverseViewMatrix() * camera->getInverseProjectionMatrix()));
+//            dest.x = tmp.x;
+//            dest.y = tmp.y;
+//            return dest;
+//        }
+//
+//        glm::vec2& worldCoordsToScreenCoords(const glm::vec2& worldCoords, glm::vec2& dest) {
+//            constexpr int32_t w = 1920, h = 1080;
+//            std::shared_ptr<Camera> camera = fnGetCamera();
+//            glm::vec4 ndcSpacePos{worldCoords.x, worldCoords.y, 0.0f, 1.0f};
+//            ndcSpacePos = (ndcSpacePos * (camera->getProjectionMatrix() * camera->getViewMatrix()));
+//            glm::vec2 windowSpace = glm::vec2{ndcSpacePos.x, ndcSpacePos.y} * (1.0f - ndcSpacePos.w);
+//            windowSpace += (glm::vec2{1.0f, 1.0f} * 0.5f);
+//            windowSpace = (windowSpace * glm::vec2{w, h});
+//            dest.x = windowSpace.x;
+//            dest.y = windowSpace.y;
+//            return dest;
+//        }
     }
 }
