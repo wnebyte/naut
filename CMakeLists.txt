@@ -11,7 +11,14 @@ endif(NOT OPENGL_FOUND)
 set(GL_LIBRARY GL GLU X11)
 
 # sets the include directory path
-set(INCLUDE_DIRECTORY src/include)
+set(INCLUDE_DIRECTORY src/include vendor/imgui)
+
+file(GLOB GLAD_SOURCES CONFIGURE_DEPENDS
+        "vendor/glad/glad.c")
+
+file(GLOB IMGUI_SOURCES CONFIGURE_DEPENDS
+        "vendor/imgui/*.h"
+        "vendor/imgui/*.cpp")
 
 file(GLOB SOURCES CONFIGURE_DEPENDS
         "src/include/*.h"
@@ -24,14 +31,13 @@ file(GLOB SOURCES CONFIGURE_DEPENDS
         "src/include/renderer/*.inl"
         "src/include/utility/*.h"
         "src/include/utility/*.inl"
-        "src/c/*.c"
         "src/cpp/*.cpp"
         "src/cpp/core/*.cpp"
         "src/cpp/io/*.cpp"
         "src/cpp/renderer/*.cpp"
         "src/cpp/utility/*.cpp")
 
-add_executable(Naut ${SOURCES})
+add_executable(Naut ${SOURCES} ${GLAD_SOURCES} ${IMGUI_SOURCES})
 
 target_link_libraries(Naut glfw3 stb ${GL_LIBRARY} m)
 
